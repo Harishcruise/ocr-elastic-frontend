@@ -7,7 +7,8 @@ import BulkUploadPage from './pages/BulkUploadPage';
 import {Routes,Route, useLocation} from 'react-router-dom'
 import SearchPage from './pages/SearchPage';
 import { useEffect, useState } from 'react';
-
+import { Provider } from "react-redux";
+import store from './store';
 function App() {
   const location = useLocation(); 
   const { pathname } = location;
@@ -19,7 +20,7 @@ function App() {
   },[pathname])
 
   return (
-    <>
+    <Provider store={store}>
     {/* {window.location.pathname === "/" ? "" : <>{<SideNavBar/>} {<Header/>}</>} */}
 
     {
@@ -33,7 +34,7 @@ function App() {
      <Route path='Search' element={<SearchPage/>}/>
      <Route path='Upload' element={<BulkUploadPage/>}/>
      </Routes>
-    </>
+     </Provider>
   );
 }
 
