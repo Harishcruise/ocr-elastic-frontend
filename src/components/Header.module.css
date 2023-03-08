@@ -1,15 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans&display=swap');
 .searchHeader{
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     height: 50px;
     z-index: 1;
     border-bottom: 1px solid #f9f9f9;
-    padding: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 350px;
+    padding-right: 10px;
     /* box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1),0px 10px 15px -3px rgba(0,0,0,0.1); */
     animation: top 1s 0.5 both;
     background-color: #ffffff;
     font-family: 'DM Sans', sans-serif;
+    gap: 20px;
 }
 
 .inputContainer{
@@ -50,4 +54,14 @@ font-family: 'DM Sans', sans-serif;
 .uploadBtn:hover{
     background-color: #bfc0c16e;
     cursor: pointer;
+}
+
+.time{
+    height: 45px;
+    width: 150px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
 }

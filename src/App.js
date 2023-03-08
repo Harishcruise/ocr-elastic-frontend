@@ -1,14 +1,18 @@
-import logo from './logo.svg';
 import './App.css';
 import SideNavBar from './components/SideNavBar';
 import Header from './components/Header';
+import {Routes,Route, Navigate, Link} from 'react-router-dom'
+import SearchPage from './pages/SearchPage';
 
 function App() {
   return (
-    <div>
-     <SideNavBar/>
+    <>
+    <SideNavBar/>
      <Header />
-    </div>
+    <Routes>
+     <Route path='/Search' element={<SearchPage/>}/>
+     </Routes>
+    </>
   );
 }
 
