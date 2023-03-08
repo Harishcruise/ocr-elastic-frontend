@@ -1,7 +1,9 @@
 import React, {useState} from 'react'
+import { useNavigate } from 'react-router-dom';
 import './UploadCard.css'
 const MAX_COUNT = 100;
 function UploadCard() {
+    const navigate = useNavigate()
     const [uploadedFiles, setUploadedFiles] = useState([])
     const [fileLimit, setFileLimit] = useState(false);
     const [uploadData, setUploadData] = useState([])
@@ -58,12 +60,18 @@ function UploadCard() {
         
     }
   return (
-    <form class="form-container" enctype='multipart/form-data'>
-	<div class="upload-files-container">
-		<div class="drag-file-area">
-			<span class="material-icons-outlined upload-icon"> file your upload </span>
+    <>
+    <div className='searchHeader'>
+
+    <div onClick={()=>(navigate('/Home'))} className='uploadBtn'>  Back </div>
+
+    </div>
+    <form className="form-container" enctype='multipart/form-data'>
+	<div className="upload-files-container">
+		<div className="drag-file-area">
+			<span className="material-icons-outlined upload-icon"> file your upload </span>
 			{/* <h3 class="dynamic-message"> Drag & drop any file here </h3> */}
-			<label class="label"><span class="browse-files"> <input id="file-upload"
+			<label className="label"><span className="browse-files"> <input id="file-upload"
             type="file"
             name="fileUpload"
             multiple
@@ -71,11 +79,11 @@ function UploadCard() {
             disabled={fileLimit}
             accept="application/pdf,image/x-png,image/jpg" class="default-file-input"/> <span class="browse-files-text"><br></br>browse file</span> <span>from device</span> </span> </label>
 		</div>
-		<span class="cannot-upload-message"> <span class="material-icons-outlined">error</span> Please select a file first <span class="material-icons-outlined cancel-alert-button">cancel</span> </span>
-		<div class="file-block">
-			<div class="file-info"> <span class="material-icons-outlined file-icon">description</span> <span class="file-name"> </span> | <span class="file-size">  </span> </div>
-			<span class="material-icons remove-file-icon">delete</span>
-			<div class="progress-bar"> </div>
+		<span className="cannot-upload-message"> <span class="material-icons-outlined">error</span> Please select a file first <span class="material-icons-outlined cancel-alert-button">cancel</span> </span>
+		<div className="file-block">
+			<div className="file-info"> <span className="material-icons-outlined file-icon">description</span> <span className="file-name"> </span> | <span className="file-size">  </span> </div>
+			<span className="material-icons remove-file-icon">delete</span>
+			<div className="progress-bar"> </div>
 		</div>
         <div style={{height:"100px",overflow:"overlay"}}>
         {uploadedFiles.map(file => (
@@ -88,6 +96,7 @@ function UploadCard() {
 		<button type="button" class="upload-button"> Upload </button>
 	</div>
     </form>
+    </>
   )
 }
 

@@ -1,6 +1,41 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans&display=swap');
+
+.searchHeader{
+    display: flex;
+	align-items: center;
+    height: 50px;
+    z-index: 1;
+    border-bottom: 1px solid #f9f9f9;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 30px;
+    /* box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1),0px 10px 15px -3px rgba(0,0,0,0.1); */
+    animation: top 1s 0.5 both;
+    background-color: #ffffff;
+    font-family: 'DM Sans', sans-serif;
+    gap: 20px;
+}
+
+.uploadBtn{
+    height: 45px;
+    width: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    border: 1px solid #000000;
+    color: black;
+}
+
+.uploadBtn:hover{
+    background-color: #bfc0c16e;
+    cursor: pointer;
+}
+
+
 .form-container {
-	width: 90vw;
+	width: 100vw;
 	height: 100vh;
 	display: flex;
    	justify-content: center;
