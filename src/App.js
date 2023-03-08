@@ -3,9 +3,6 @@ import SideNavBar from './components/SideNavBar';
 import Header from './components/Header';
 import {Routes,Route, Navigate, Link} from 'react-router-dom'
 import SearchPage from './pages/SearchPage';
-import Login from "./pages/Login";
-import HomePage from "./pages/HomePage";
-import { useEffect, useState } from "react";
 
 function App() {
   // const [navBarState, setNavBarState] = useState(false)
@@ -25,9 +22,7 @@ function App() {
     {/* <SideNavBar/> */}
      {/* <Header /> */}
     <Routes>
-      <Route path='/' element={<Login/>}/>
-      <Route path='HomePage' element={<HomePage/>}/>
-      <Route path='Search' element={<SearchPage/>}/>
+     <Route path='/Search' element={<SearchPage/>}/>
      </Routes>
     </>
   );
