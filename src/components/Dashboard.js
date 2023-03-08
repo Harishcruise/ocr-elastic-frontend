@@ -86,7 +86,7 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
 
   return (
     <>
-    <div>
+    <div style={{paddingTop:"50px"}}>
 
   <div className= {Style.wrapper}>
   <div className= {Style.piechart}>
