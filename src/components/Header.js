@@ -4,11 +4,11 @@ import Style from './Header.module.css'
 function Header() {
     const [currTime,setCurrTime] = useState("")
 
-    useEffect(()=>{
+    setInterval(()=>{
         var date = new Date();
         var current_time = date.getHours()+":"+date.getMinutes()+":"+ date.getSeconds();
         setCurrTime(current_time)
-    })
+    },3000)
     
 
   return (
@@ -27,7 +27,7 @@ function Header() {
                + Bulk Upload
             </div>
 
-            <div>
+            <div className={Style.time}>
                 {currTime}
             </div>
         </div>
