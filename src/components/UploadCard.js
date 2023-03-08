@@ -1,6 +1,9 @@
 import React, {useState} from 'react'
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './UploadCard.css'
+import { async } from 'q';
+import Loader from './Loader';
 const MAX_COUNT = 100;
 function UploadCard() {
     const navigate = useNavigate()
@@ -9,6 +12,7 @@ function UploadCard() {
     const [uploadData, setUploadData] = useState([])
     const [uploadState,setUploadState] = useState(false)
     const [successPage,setSuccessPage] = useState(false)
+    const [data,setData] = useState({})
     
 
     const handleUploadFiles = files => {
@@ -32,9 +36,11 @@ function UploadCard() {
 
     }
 
-    const onClickHandle = () =>{
+    const onClickHandle = async() =>{
         setUploadState(true)
         var temp =[]
+        var objTemp ={}
+        var obj
         uploadedFiles.map((val)=>{
             
             var reader = new FileReader();
@@ -43,12 +49,19 @@ function UploadCard() {
             temp.push({
                 [val.name]:reader.result.split(',').pop()
             })
-            };
+            var base64 = reader.result.split(',').pop();
+            obj = Object.assign(objTemp,{[val.name]:base64});
+            };     
             reader.onerror = function (error) {
             console.log('Error: ', error);
             };
         })
+        setData(objTemp)
         setUploadData(temp)
+        await axios.post("http://172.174.180.163:8500/base64",data)
+        .then((response)=>{
+            console.log(response)
+        })
         setUploadState(false)
         setSuccessPage(true)
     }
@@ -66,10 +79,20 @@ function UploadCard() {
     <div onClick={()=>(navigate('/Home'))} className='uploadBtn'>  Back </div>
 
     </div>
+    {(uploadState) ? (<Loader/>):
+    ((successPage) ? (
+        <div style={{display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column",marginTop:"200px"}}>
+        <h2> Your Data Uploaded Successfully</h2>
+        <button type="button" class="upload-button" onClick={()=>{
+        setSuccessPage(false)
+        setUploadedFiles([])
+        }}> + New Uploads </button>
+        </div>
+    ):(
     <form className="form-container" enctype='multipart/form-data'>
 	<div className="upload-files-container">
 		<div className="drag-file-area">
-			<span className="material-icons-outlined upload-icon"> file your upload </span>
+			<span className="material-icons-outlined upload-icon"> upload your files  </span>
 			{/* <h3 class="dynamic-message"> Drag & drop any file here </h3> */}
 			<label className="label"><span className="browse-files"> <input id="file-upload"
             type="file"
@@ -93,9 +116,11 @@ function UploadCard() {
                 ))}
                 </div>
         
-		<button type="button" class="upload-button"> Upload </button>
+		<button type="button" class="upload-button" onClick={onClickHandle}> Upload </button>
 	</div>
-    </form>
+    </form>)
+    )
+    }
     </>
   )
 }

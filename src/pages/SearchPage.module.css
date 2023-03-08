@@ -1,6 +1,15 @@
 .container{
     margin-left: 100px;
-    margin-top: 0px;
+    padding-top: 70px;
 }
 
-
+.cols{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+    /* justify-content: center; */
+  }

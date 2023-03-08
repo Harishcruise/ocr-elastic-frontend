@@ -12,3 +12,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.css-1xhypcz-MuiStack-root>.MuiTextField-root {
+  min-width: 200px;
+  background-color: #ffffff;
+  border-radius: 5px;
+}
