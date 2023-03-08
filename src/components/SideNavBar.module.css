@@ -1,0 +1,30 @@
+.navContainer{
+   display: flex;
+   flex:1;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   /* padding: 0px 10px; */
+   gap: 20px;
+   height: 100%;
+   position: fixed;
+   width: 70px;
+   background-color: #ffffff;
+   /* box-shadow: 1px -1px 22px -7px rgba(0,0,0,0.85);
+   -webkit-box-shadow: 1px -1px 22px -7px rgba(0,0,0,0.85);
+   -moz-box-shadow: 1px -1px 22px -7px rgba(0,0,0,0.85); */
+}
+
+.icon{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    color: #555454;
+}
+
+.icon:hover{
+   border-radius: 10px;
+   background-color: #EEEEEE;
+}
