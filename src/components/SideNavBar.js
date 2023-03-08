@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Style from './SideNavBar.module.css'
 import { FiMonitor,FiSearch,FiLogOut } from "react-icons/fi";
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 function SideNavBar() {
   const [navState,setNavState] = useState("Search")
