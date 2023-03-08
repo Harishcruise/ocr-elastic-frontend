@@ -1,8 +1,11 @@
 import React from 'react'
+import UploadCard from '../components/UploadCard'
 
 function BulkUploadPage() {
   return (
-    <div>BulkUploadPage</div>
+    <>
+        <UploadCard />
+    </>
   )
 }
 
