@@ -27,4 +27,16 @@
 .icon:hover{
    border-radius: 10px;
    background-color: #EEEEEE;
+   cursor: pointer;
+}
+
+.active_icon{
+   display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    color: #1A120B;
+    border-radius: 10px;
+   background-color: #EEEEEE ;
 }
