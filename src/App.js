@@ -1,28 +1,25 @@
 import './App.css';
 import SideNavBar from './components/SideNavBar';
 import Header from './components/Header';
+import Login from './pages/Login';
+import HomePage from './pages/HomePage';
+import BulkUploadPage from './pages/BulkUploadPage';
 import {Routes,Route, Navigate, Link} from 'react-router-dom'
 import SearchPage from './pages/SearchPage';
 
 function App() {
-  // const [navBarState, setNavBarState] = useState(false)
-
-  // useEffect(()=>{
-  //   window.location.pathname === "/" ? setNavBarState(false) : setNavBarState(true) 
-  //   console.log(window.location.pathname)
-  //   console.log(navBarState)
-  // })
+  
 
   return (
     <>
-    {window.location.pathname === "/" ? "" : <>{<SideNavBar/>} {<Header/>}</>}
-
-    {/* {navBarState ? <SideNavBar /> : "" } */}
-
-    {/* <SideNavBar/> */}
-     {/* <Header /> */}
+    {window.location.pathname === "/" || window.location.pathname === "Upload" ? "" : <>{<SideNavBar/>} {<Header/>}</>}
+ 
+  
     <Routes>
-     <Route path='/Search' element={<SearchPage/>}/>
+      <Route path='/' element ={<Login/>}/>
+      <Route path='Home' element ={<HomePage/>}/>
+     <Route path='Search' element={<SearchPage/>}/>
+     <Route path='Upload' element={<BulkUploadPage/>}/>
      </Routes>
     </>
   );

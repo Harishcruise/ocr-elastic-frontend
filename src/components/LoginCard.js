@@ -7,7 +7,7 @@ function LoginCard() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    navigate("HomePage");
+    navigate("Home");
     window.location.reload();
   };
 
