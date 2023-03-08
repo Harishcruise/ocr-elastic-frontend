@@ -32,7 +32,7 @@ function SideNavBar() {
         <FiMonitor size={25} />
     </div>
     </Link>
-   <Link>
+   <Link to='/'>
     <div className={Style.icon} style={{marginTop:"300px"}}>
         <FiLogOut size={25} />
     </div>
