@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import Style from './Header.module.css'
 
 function Header() {
+
+    const navigate = useNavigate()
     const [currTime,setCurrTime] = useState("")
 
     setInterval(()=>{
@@ -22,11 +25,11 @@ function Header() {
 
 
               </div>
-
-            <div className={Style.uploadBtn}>
+          
+            <div onClick={()=>(navigate('Upload'))} className={Style.uploadBtn}>
                + Bulk Upload
             </div>
-
+            
             <div className={Style.time}>
                 {currTime}
             </div>
