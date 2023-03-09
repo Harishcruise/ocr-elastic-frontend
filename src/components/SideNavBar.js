@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Style from './SideNavBar.module.css'
-import { FiMonitor,FiSearch,FiLogOut } from "react-icons/fi";
+import { FiMonitor,FiSearch,FiLogOut, FiInfo} from "react-icons/fi";
 import { Link, useLocation } from 'react-router-dom';
 
 function SideNavBar() {
@@ -32,6 +32,13 @@ function SideNavBar() {
         <FiMonitor size={25} />
     </div>
     </Link>
+
+    <Link to='Home'>
+    <div onClick={()=>(setNavState("Home"))} className={navState === 'Home' ? Style.active_icon : Style.icon} >
+        <FiInfo size={25} />
+    </div>
+    </Link>
+
    <Link to='/'>
     <div className={Style.icon} style={{marginTop:"300px"}}>
         <FiLogOut size={25} />
