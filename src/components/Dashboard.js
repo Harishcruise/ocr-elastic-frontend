@@ -157,7 +157,7 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
      
      <div className={Style.Linechart}>
       <p>File Growth over Time</p>
-     <LineChart width={1190} height={290} data={upload}
+     <LineChart width={770} height={290} data={upload}
   margin={{right: 20, left: 20, bottom: 5 }}>
   <CartesianGrid strokeDasharray="3 3" />
   <XAxis dataKey="name" />
@@ -169,6 +169,21 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
 </LineChart>
      </div>
 
+     <div className={Style.Barchart1}>
+        <p>Uploaded Files based on file type</p>
+      <BarChart width={400} height={290} margin={{ right:20}} data={files}>
+    <Bar dataKey="students" fill="#8884d8">
+    {data.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                    ))}
+    </Bar>
+    <CartesianGrid stroke="#ccc" />
+    <XAxis dataKey="name" />
+    <YAxis />
+  </BarChart>
+      </div>
+
+     
      {/* <div className={Style.Calendarheatmap}>
      <CalendarHeatmap
   data={calendar}>

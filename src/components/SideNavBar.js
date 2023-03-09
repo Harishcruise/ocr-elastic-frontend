@@ -33,8 +33,8 @@ function SideNavBar() {
     </div>
     </Link>
 
-    <Link to='Home'>
-    <div onClick={()=>(setNavState("Home"))} className={navState === 'Home' ? Style.active_icon : Style.icon} >
+    <Link to='Search'>
+    <div onClick={()=>(setNavState("Search"))} className={navState === 'Search' ? Style.active_icon : Style.icon} >
         <FiInfo size={25} />
     </div>
     </Link>

@@ -39,6 +39,7 @@ p{
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.25);
   border-radius: 10px;
   margin-left:20px;
+  margin-bottom: 0px;
 }
 .Areachart:hover{
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.551);
@@ -50,8 +51,22 @@ p{
   border-radius: 10px;
   margin-left: 150px;
   margin-top: 20px;
-  margin-bottom: 60px;
+  margin-bottom: 40px;
 }
 .Linechart:hover{
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.551);
 }
+
+.Barchart1{
+  background-color:#fff;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.25);
+  border-radius: 10px;
+  margin-top: 20px;
+  margin-bottom: 40px;
+  margin-left: 20px;
+
+}
+.Barchart1:hover{
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.551);
+}
+
