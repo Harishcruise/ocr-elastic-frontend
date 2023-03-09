@@ -1,8 +1,7 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './UploadCard.css'
-import { async } from 'q';
 import Loader from './Loader';
 const MAX_COUNT = 100;
 function UploadCard() {
@@ -12,7 +11,30 @@ function UploadCard() {
     const [uploadData, setUploadData] = useState([])
     const [uploadState,setUploadState] = useState(false)
     const [successPage,setSuccessPage] = useState(false)
-    const [data,setData] = useState({})
+    const [data,setData] = useState()
+
+    useEffect(()=>{
+        var temp =[]
+        var objTemp ={}
+        var obj
+        uploadedFiles.map((val)=>{
+            
+            var reader = new FileReader();
+            reader.readAsDataURL(val);
+            reader.onload = function () {
+            temp.push({
+                [val.name]:reader.result.split(',').pop()
+            })
+            var base64 = reader.result.split(',').pop();
+            obj = Object.assign(objTemp,{[val.name]:base64});
+            };     
+            reader.onerror = function (error) {
+            console.log('Error: ', error);
+            };
+        })
+        setData(objTemp)
+        setUploadData(temp)
+    },[uploadedFiles])
     
 
     const handleUploadFiles = files => {
@@ -34,32 +56,15 @@ function UploadCard() {
             setUploadedFiles(uploaded)
         } 
 
+        
+
     }
 
     const onClickHandle = async() =>{
         setUploadState(true)
-        var temp =[]
-        var objTemp ={}
-        var obj
-        uploadedFiles.map((val)=>{
-            
-            var reader = new FileReader();
-            reader.readAsDataURL(val);
-            reader.onload = function () {
-            temp.push({
-                [val.name]:reader.result.split(',').pop()
-            })
-            var base64 = reader.result.split(',').pop();
-            obj = Object.assign(objTemp,{[val.name]:base64});
-            };     
-            reader.onerror = function (error) {
-            console.log('Error: ', error);
-            };
-        })
-        setData(objTemp)
-        setUploadData(temp)
         await axios.post("http://172.174.180.163:8500/base64",data)
         .then((response)=>{
+            console.log(data)
             console.log(response)
         })
         setUploadState(false)
