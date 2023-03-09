@@ -3,21 +3,37 @@ import Style from './SearchPage.module.css'
 import SortComponent from '../components/SortComponent';
 import SearchCardItem from '../components/SearchCardItem';
 import Loader from '../components/Loader';
-import {useSelector} from 'react-redux';
-import { SearchDataState } from '../redux/SearchDataSlice';
+import {useSelector ,useDispatch} from 'react-redux';
+import { SearchDataState , setData } from '../redux/SearchDataSlice';
+import axios from 'axios';
 function SearchPage() {
   const [loaderState,setLoaderState] = useState(true);
+  const dispatch = useDispatch()
   const data = useSelector(SearchDataState)
+
+  // axios.post("http://172.174.180.163:8081/getAllFiles",{
+  //   index:"ocrfilestorage"
+  // }).then((response)=>{
+  //   dispatch(setData(response.data.hits))
+  //   setLoaderState(false)
+  // })
   setTimeout(()=>{
     setLoaderState(false)
   },[2500])
+  const intialData = async()=>{
+    await axios.post("http://172.174.180.163:8081/getAllFiles",{
+      index:"ocrfilestorage"
+    }).then((response)=>{
+      dispatch(setData(response.data.hits)) 
+      console.log(response)
+    })
+  }
 
   useEffect(()=>{
-    setLoaderState(true);
-    setTimeout(()=>{
-      setLoaderState(false)
-    },[3000])
-  },[data])
+    // setLoaderState(true)
+    intialData()
+    // setLoaderState(false)
+  },[])
   return (
     <div className={Style.container}>
     {
