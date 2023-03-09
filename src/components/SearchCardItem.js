@@ -1,8 +1,9 @@
 import React from 'react'
 import { BsFillCloudDownloadFill, BsFillFileEarmarkFill } from 'react-icons/bs'
 import Style from './SearchCardItem.module.css'
-function SearchCardItem({fileName,dataBase64,type,fileClass,blobUrl}) {
+function SearchCardItem({fileName,dataBase64,type,fileClass,blobUrl,uploadedBy,uploadedDate}) {
   console.log(type)
+  var date = uploadedDate.split(' ')
     let fileString = {
         file_name: fileName,
         file:`data:${type};base64,${dataBase64}`
@@ -54,10 +55,10 @@ function SearchCardItem({fileName,dataBase64,type,fileClass,blobUrl}) {
                             File Type : {fileClass}
                           </p>
                           <p>
-                            Uploaded Date : 08-0-2023
+                            Uploaded Date : {date[0]}
                           </p>
                           <p>
-                            Uploaded By : Abdul
+                            Uploaded By : {uploadedBy}
                           </p>
 
                           <BsFillCloudDownloadFill style={{marginLeft:"170px",marginTop:"110px"}} size={20} onClick={previewFile} />

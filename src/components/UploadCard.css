@@ -42,6 +42,30 @@
 	align-items: center;
 	font-family: 'DM Sans', sans-serif;
 }
+
+.form-container-2 {
+	width: 300px;
+	height: 150px;
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+   	justify-content: center;
+	align-items: center;
+	font-family: 'DM Sans', sans-serif;
+	padding: 50px;
+	border: 2px dashed #000000;
+	border-radius: 10px;
+	margin-left: 40px;
+	overflow: overlay;
+	-ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none; 
+    gap: 10px;
+  }
+
+.form-container-2::-webkit-scrollbar{
+    display: none;
+}
+
 .upload-files-container {
 	background-color: #f7fff7;
 	width: 420px;

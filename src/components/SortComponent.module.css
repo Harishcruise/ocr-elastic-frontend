@@ -42,3 +42,21 @@
    background-color: #EEEEEE;
    cursor: pointer;
 }
+
+.uploadBtn{
+    height: 45px;
+    width: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    border: 1px solid #000000;
+    color: black;
+    margin-top: 12px;
+}
+
+.uploadBtn:hover{
+    background-color: #bfc0c16e;
+    cursor: pointer;
+}
