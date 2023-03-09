@@ -1,10 +1,12 @@
-import React from 'react'
+import React, {useEffect} from 'react';
+import axios from 'axios';
 import Style from './Dashboard.module.css';
 import { PieChart, Pie, Legend, Sector, Cell, ResponsiveContainer, BarChart, Bar, CartesianGrid, XAxis, YAxis, LineChart, Line, Tooltip, AreaChart,
   Area} from 'recharts';
 import CalendarHeatmap from 'reactjs-calendar-heatmap'
 
 function Dashboard() {
+   
 
   const files = [
     {name: 'pdf', students: 80},
@@ -27,43 +29,43 @@ const upload = [
   {
     "name": "Jan",
     "uv": 4000,
-    "Uploaded Rate": 2400,
+    "Upload Rate": 2400,
     "amt": 2400
   },
   {
     "name": "March",
     "uv": 3000,
-    "Uploaded Rate": 1398,
+    "Upload Rate": 1398,
     "amt": 2210
   },
   {
     "name": "June",
     "uv": 2000,
-    "Uploaded Rate": 9800,
+    "Upload Rate": 9800,
     "amt": 2290
   },
   {
     "name": "Aug",
     "uv": 2780,
-    "Uploaded Rate": 3908,
+    "Upload Rate": 3908,
     "amt": 2000
   },
   {
     "name": "Sept",
     "uv": 1890,
-    "Uploaded Rate": 4800,
+    "Upload Rate": 4800,
     "amt": 2181
   },
   {
     "name": "Nov",
     "uv": 2390,
-    "Uploaded Rate": 3800,
+    "Upload Rate": 3800,
     "amt": 2500
   },
   {
     "name": "Dec",
     "uv": 3490,
-    "Uploaded Rate": 4300,
+    "Upload Rate": 4300,
     "amt": 2100
   }
 ]
@@ -167,23 +169,27 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
   <YAxis />
   <Tooltip />
   <Legend />
-  <Line type="monotone" dataKey="Uploaded Rate" stroke="#8B008B" />
+  <Line type="monotone" dataKey="Upload Rate" stroke="#8B008B" />
   {/* <Line type="monotone" dataKey="uv" stroke="#82ca9d" /> */}
 </LineChart>
      </div>
 
-     <div className={Style.Barchart1}>
+     <div className={Style.Activity}>
         <p>Recent Activity</p>
-      <BarChart width={400} height={290} margin={{ right:20}} data={files}>
-    <Bar dataKey="students" fill="#8884d8">
+        <div className={Style.ActivityDiv}>
+          You uploaded 7 files 4 mins ago
+        </div>
+      <BarChart color={"white"} width={400} height={260} margin={{ right:20}} data={files}>
+        
+    {/* <Bar dataKey="students" fill="#8884d8">
     {data.map((entry, index) => (
                                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                     ))}
-    </Bar>
+    </Bar> */}
     {/* <CartesianGrid stroke="#ccc" /> */}
-    <XAxis dataKey="name" />
+    {/* <XAxis dataKey="name" />
     <YAxis />
-    <Tooltip  cursor={false} />
+    <Tooltip  cursor={false} /> */}
   </BarChart>
       </div>
 
