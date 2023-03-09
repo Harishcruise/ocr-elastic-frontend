@@ -16,6 +16,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useDispatch, useSelector } from 'react-redux';
 import { setDateData } from '../redux/DateFilterSlice';
 import { setFileClassData } from '../redux/FileClassFilterSlice';
+import { setSortData } from '../redux/SortSlice';
 import dayjs from 'dayjs';
 function SortComponent() {
     const [value, setValue] = React.useState(dayjs());
@@ -127,10 +128,10 @@ function SortComponent() {
             </div>
             </div>
       <div className={Style.selectContainer}>
-      <div className={Style.uploadBtn} style={{gap:"10px"}} onClick={applyFilter}>
+      <div className={Style.uploadBtn} style={{gap:"10px"}} onClick={()=>(dispatch(setSortData('Ascending')))}>
             <FaSortAlphaDown />  Ascending
       </div>
-      <div className={Style.uploadBtn} style={{gap:"10px"}} onClick={applyFilter}>
+      <div className={Style.uploadBtn} style={{gap:"10px"}} onClick={()=>(dispatch(setSortData('Descending')))}>
             <FaSortAlphaDownAlt />  Descending
       </div>
       </div>

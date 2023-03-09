@@ -16,7 +16,7 @@ function Header() {
 
     
       await axios.post("http://172.174.180.163:8081/OCRFileSearch",{
-      index:"ocrfilestorage",    
+      index:"testing2",    
       query:e
       }).then((response)=>{
         // console.log(response)
@@ -29,8 +29,10 @@ function Header() {
   }
   
     const onEnter = (e) => {
+      
          if (e.key === 'Enter') {
           elasticSearch(input)
+          // e.preventDefault()
           navigate("/Search")
         }
     }
