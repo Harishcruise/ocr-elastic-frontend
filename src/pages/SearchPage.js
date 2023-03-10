@@ -49,46 +49,53 @@ function SearchPage() {
         <div className= {Style.cols}>
       {
         data.filter((val)=>{
-        {/* if(arrayDate[0] === dateData){
-          return val._source.fileUploadedDate.split(' ')[0] === dateData
-        } */}
+
+          let tempA  = val._source.fileUploadedDate.split(' ')[0]
+          let tempA1 = tempA.split("/").reverse()
+          let da = new Date(""+tempA1[0]+"-"+tempA1[1]+"-"+tempA1[2])
+
+
+       
         if(FileClassFilterData === 1){
-          if(val._source.fileUploadedDate.split(' ')[0] === dateData){
-          return val._source.fileUploadedDate.split(' ')[0] === dateData && val._source.fileClassification === "purchase_order"
-        }
+          if(dateData !== ''){
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "purchase_order" 
+          }
           return val._source.fileClassification === "purchase_order" 
         }
         if(FileClassFilterData === 2){
-          if(val._source.fileUploadedDate.split(' ')[0] === dateData){
-          return val._source.fileUploadedDate.split(' ')[0] === dateData && val._source.fileClassification === "purchase_order"
-        }
+        if(dateData !== ''){
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "Sales Order" 
+          }
           return val._source.fileClassification === "Sales Order" 
         }
         if(FileClassFilterData === 3){
-          if(val._source.fileUploadedDate.split(' ')[0] === dateData){
-          return val._source.fileUploadedDate.split(' ')[0] === dateData && val._source.fileClassification === "resume"
-        }
+        if(dateData !== ''){
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "resume" 
+          }
           return val._source.fileClassification === "resume" 
         }
         if(FileClassFilterData === 4){
-          if(val._source.fileUploadedDate.split(' ')[0] === dateData){
-          return val._source.fileUploadedDate.split(' ')[0] === dateData && val._source.fileClassification === "Certifications"
-        }
+        if(dateData !== ''){
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "Certifications" 
+          }
           return val._source.fileClassification === "Certifications" 
         }
         if(FileClassFilterData === 5){
-          if(val._source.fileUploadedDate.split(' ')[0] === dateData){
-          return val._source.fileUploadedDate.split(' ')[0] === dateData && val._source.fileClassification === "Letter of credit"
-        }
+        if(dateData !== ''){
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "Letter of credit" 
+          }
           return val._source.fileClassification === "Letter of credit" 
         }
         if(FileClassFilterData === 6){
-          if(val._source.fileUploadedDate.split(' ')[0] === dateData){
-          return val._source.fileUploadedDate.split(' ')[0] === dateData && val._source.fileClassification === "Presentation"
-        }
+        if(dateData !== ''){
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "Presentation" 
+          }
           return val._source.fileClassification === "Presentation" 
         }
         if(FileClassFilterData === 0){
+          if(dateData !== ''){
+            return (da >= dateData.startDate && da <= dateData.endDate)
+          }
           return val
         }
         return val

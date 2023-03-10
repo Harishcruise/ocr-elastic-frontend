@@ -20,7 +20,8 @@ import { setSortData , SortDataSate } from '../redux/SortSlice';
 import { DateSortDataState, setDateSortData } from '../redux/DateSortSlice';
 import dayjs from 'dayjs';
 function SortComponent() {
-    const [value, setValue] = React.useState(dayjs());
+    const [startValue, setStartValue] = useState();
+    const [endValue, setEndValue] = useState();
     const [sortState, setSortState] = useState(false)
     const [sortState2, setSortState2] = useState(false)
     const [fileClass, setFileClass] = useState('');
@@ -32,7 +33,10 @@ function SortComponent() {
 
   const applyFilter = () =>{
     dispatch(setFileClassData(fileClass))
-    dispatch(setDateData(dateValue))
+    dispatch(setDateData({
+      startDate : startValue,
+      endDate : endValue
+    }))
   }
 
 
@@ -50,7 +54,6 @@ function SortComponent() {
             
             <div className={Style.icon} onClick={()=>{
               setSortState(false)
-              // dispatch(setFileClass(0))
             }}>
             <VscChromeClose size={20} />
             </div>
@@ -98,9 +101,9 @@ function SortComponent() {
       </FormControl>
     </Box>
 
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
+    {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer  components={['DatePicker']}>
-        <DatePicker label="Uploaded Date" value={value}
+        <DatePicker label="Start Date" value={value}
           onChange={(newValue) =>{
             console.log(newValue)
             setValue(newValue)
@@ -111,6 +114,29 @@ function SortComponent() {
             console.log(originalDate)
             setDateValue(originalDate)
           }} />
+      </DemoContainer>
+    </LocalizationProvider> */}
+
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer  components={['DatePicker']}>
+        <DatePicker label="Start Date" value={startValue} format='DD / MM / YYYY'
+          onChange={(newValue) =>{
+            console.log(newValue)
+            setStartValue(newValue)
+            
+          }} />
+      </DemoContainer>
+    </LocalizationProvider>
+
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer  components={['DatePicker']}> 
+        <DatePicker label="End Date" value={endValue} format='DD / MM / YYYY'
+          onChange={(newValue) =>{
+            console.log(newValue)
+            setEndValue(newValue)
+          }} 
+
+          />
       </DemoContainer>
     </LocalizationProvider>
 
@@ -146,6 +172,12 @@ function SortComponent() {
       </div>
       </>) : (
         <div className={Style.sortCont} >
+        <div onClick={()=>{
+              dispatch(setFileClassData(0))
+              dispatch(setDateData(''))
+        }} className={Style.resetBtn}>
+               Reset
+            </div>
         <div className={Style.sortIcon} onClick={()=>{
           setSortState2(true)
         }} >
