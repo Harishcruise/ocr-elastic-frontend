@@ -44,8 +44,9 @@ function SortComponent() {
   }
 
   const intialData = async()=>{
+    var tempData = JSON.parse(localStorage.getItem("userCredentials"))
     await axios.post("http://172.174.180.163:8081/getAllFiles",{
-      index:"testing4"
+      index:tempData.username
     }).then((response)=>{
       dispatch(setData(response.data.hits)) 
       console.log(response)

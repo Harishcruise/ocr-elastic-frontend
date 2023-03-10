@@ -16,8 +16,9 @@ function Header() {
     const elasticSearch = async (e) =>{
 
       dispatch(setLoaderData(true))
+      var tempData = JSON.parse(localStorage.getItem("userCredentials"))
       await axios.post("http://172.174.180.163:8081/OCRFileSearch",{
-      index:"testing4",    
+      index:tempData.username,    
       query:e
       }).then((response)=>{
         // console.log(response)

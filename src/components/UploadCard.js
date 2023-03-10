@@ -86,10 +86,11 @@ function UploadCard() {
                 console.log(base64data);
                 var base64 = reader.result.split(',').pop();
                 var name = "compressed.zip"
+                var tempData = JSON.parse(localStorage.getItem("userCredentials"))
                 var obj = {
                     username:"balaji",
                     password:"balajipwd",
-                    index:"testing4",
+                    index:tempData.username,
                     [name]:base64
                 }
                 console.log(obj)
