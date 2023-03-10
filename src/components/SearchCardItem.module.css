@@ -187,3 +187,18 @@ h1{
       margin: 0 0 2rem 0;
     }
   }
+
+  .downloadBtn{
+    margin-left: 200px;
+    margin-top: 130px;
+    width: 40px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .downloadBtn:hover{
+    border-radius: 5px;
+    background-color: #bfc0c16e;
+  }

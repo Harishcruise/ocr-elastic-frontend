@@ -3,38 +3,42 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './UploadCard.css'
 import Loader from './Loader';
+import JSZip from 'jszip';
 const MAX_COUNT = 100;
 function UploadCard() {
     const navigate = useNavigate()
+    let zip = new JSZip();
     const [uploadedFiles, setUploadedFiles] = useState([])
     const [fileLimit, setFileLimit] = useState(false);
     const [uploadData, setUploadData] = useState([])
     const [uploadState,setUploadState] = useState(false)
     const [successPage,setSuccessPage] = useState(false)
     const [data,setData] = useState()
-
-    useEffect(()=>{
-        var temp =[]
-        var objTemp ={}
-        var obj
-        uploadedFiles.map((val)=>{
+    const [listFileState,setListFileState] = useState(false)
+    
+    // useEffect(()=>{
+    //     var temp =[]
+    //     var objTemp ={}
+    //     var obj
+    //     uploadedFiles.map((val)=>{
             
-            var reader = new FileReader();
-            reader.readAsDataURL(val);
-            reader.onload = function () {
-            temp.push({
-                [val.name]:reader.result.split(',').pop()
-            })
-            var base64 = reader.result.split(',').pop();
-            obj = Object.assign(objTemp,{[val.name]:base64});
-            };     
-            reader.onerror = function (error) {
-            console.log('Error: ', error);
-            };
-        })
-        setData(objTemp)
-        setUploadData(temp)
-    },[uploadedFiles])
+    //         var reader = new FileReader();
+    //         reader.readAsDataURL(val);
+    //         reader.onload = function () {
+    //         temp.push({
+    //             [val.name]:reader.result.split(',').pop()
+    //         })
+    //         var base64 = reader.result.split(',').pop();
+    //         obj = Object.assign(objTemp,{[val.name]:base64});
+    //         };     
+    //         reader.onerror = function (error) {
+    //         console.log('Error: ', error);
+    //         };
+    //     })
+    //     setData(objTemp)
+    //     setUploadData(temp)
+
+    // },[uploadedFiles])
     
 
     const handleUploadFiles = files => {
@@ -55,17 +59,44 @@ function UploadCard() {
         if (!limitExceeded){
             setUploadedFiles(uploaded)
         } 
-
-        
+        setListFileState(true)
 
     }
 
     const onClickHandle = async() =>{
         setUploadState(true)
-        await axios.post("http://172.174.180.163:8500/base64",data)
-        .then((response)=>{
-            console.log(data)
+        // await axios.post("http://172.174.180.163:8500/base64",data)
+        // .then((response)=>{
+        //     console.log(data)
+        //     console.log(response)
+        // })
+        for(let file of uploadedFiles){ 
+            let filename = file.name
+            zip.file(filename, file)
+        }
+        zip.generateAsync({type:'blob'}).then((blobdata)=>{
+            
+            let zipblob = new Blob([blobdata])
+            var reader = new FileReader();
+            reader.readAsDataURL(zipblob); 
+            reader.onloadend = function() {
+            var base64data = reader.result;                
+                console.log(base64data);
+                var base64 = reader.result.split(',').pop();
+                var name = "compressed.zip"
+                var obj = {
+                    username:"balaji",
+                    password:"balajipwd",
+                    index:"testing4",
+                    [name]:base64
+                }
+                console.log(obj)
+            axios.post("http://172.174.180.163:8500/users/AddFile",obj)
+                .then((response)=>{
+            // console.log(data)
             console.log(response)
+        })
+            };     
         })
         setUploadState(false)
         setSuccessPage(true)
@@ -87,13 +118,27 @@ function UploadCard() {
     {(uploadState) ? (<Loader/>):
     ((successPage) ? (
         <div style={{display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column",marginTop:"200px"}}>
-        <h2> Your Data Uploaded Successfully</h2>
+        <h2> Your Data has been Uploaded Successfully</h2>
         <button type="button" class="upload-button" onClick={()=>{
         setSuccessPage(false)
         setUploadedFiles([])
+        setListFileState(false)
         }}> + New Uploads </button>
         </div>
     ):(
+    <div style={{display:"flex",alignItems:"center"}}>
+    {
+        (listFileState) ? (<div style={{display:"flex",flexDirection:"column",alignItems:"center",fontFamily:"'DM Sans', sans-serif;"}}>
+    <h2>List of files</h2>
+    <div className='form-container-2'>
+    {uploadedFiles.map(file => (
+                    <div>
+                        {file.name}
+                    </div>
+                ))}
+    </div>
+    </div>):""
+    }
     <form className="form-container" enctype='multipart/form-data'>
 	<div className="upload-files-container">
 		<div className="drag-file-area">
@@ -114,16 +159,13 @@ function UploadCard() {
 			<div className="progress-bar"> </div>
 		</div>
         <div style={{height:"100px",overflow:"overlay"}}>
-        {uploadedFiles.map(file => (
-                    <div>
-                        {file.name}
-                    </div>
-                ))}
                 </div>
         
 		<button type="button" class="upload-button" onClick={onClickHandle}> Upload </button>
 	</div>
-    </form>)
+    </form>
+    </div>
+    )
     )
     }
     </>
