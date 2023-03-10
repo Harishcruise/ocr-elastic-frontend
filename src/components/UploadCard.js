@@ -88,8 +88,8 @@ function UploadCard() {
                 var name = "compressed.zip"
                 var tempData = JSON.parse(localStorage.getItem("userCredentials"))
                 var obj = {
-                    username:"balaji",
-                    password:"balajipwd",
+                    username:tempData.username,
+                    password:tempData.password,
                     index:tempData.username,
                     [name]:base64
                 }
