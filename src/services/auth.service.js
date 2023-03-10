@@ -34,6 +34,7 @@ const login = (bodyFormData) => {
     .then((response) => {
       if (response) {
         localStorage.setItem("user", JSON.stringify(response));
+        localStorage.setItem("userCredentials", JSON.stringify({username: bodyFormData.get("username"),password : bodyFormData.get("password")}))
         }
       
       console.log(typeof response.data.status);
@@ -44,6 +45,7 @@ const login = (bodyFormData) => {
 
 const logout = () => {
   localStorage.removeItem("user");
+  localStorage.removeItem("userCredentials");
 
   // caches.keys().then((names) => {
   //   names.forEach((name) => {

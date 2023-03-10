@@ -53,7 +53,7 @@ function SearchCardItem({fileName,dataBase64,type,fileClass,blobUrl,uploadedBy,u
 					<div className={Style.front} >
                         <BsFillFileEarmarkFill color="#80AFE7" size={120} />
 
-                        <h4>{fileName}</h4>
+                        <p style={{fontSize:"16px"}}>{fileName}</p>
 					</div>
 					<div className={Style.back}>
 					<div className={Style.inner}>
