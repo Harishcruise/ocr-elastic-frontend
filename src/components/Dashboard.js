@@ -3,7 +3,6 @@ import axios from 'axios';
 import Style from './Dashboard.module.css';
 import { PieChart, Pie, Legend, Sector, Cell, ResponsiveContainer, BarChart, Bar, CartesianGrid, XAxis, YAxis, LineChart, Line, Tooltip, AreaChart,
   Area} from 'recharts';
-import CalendarHeatmap from 'reactjs-calendar-heatmap'
 
 function Dashboard() {
   const [BarChartValue, setBarChartValue] = useState([]);
@@ -88,25 +87,28 @@ function Dashboard() {
     fetchLinechartData(bodyFormData);
   }, []);
 
-  var bodyFormData = new FormData();
-  bodyFormData.append('username', 'charan'); //Current User
-  bodyFormData.append('password', 'charanpwd'); 
+  var ActivityFormData = new FormData();
+  ActivityFormData.append('username', 'charan'); //Current User
+  ActivityFormData.append('password', 'charanpwd'); 
 
-  const fetchRecentActivity = (bodyFormData) => {
+  const fetchRecentActivity = (ActivityFormData) => {
     return axios({
       method: "post",
       url: "http://172.174.180.163:8500/users/GetMetaData",
-      data: bodyFormData,
+      data: ActivityFormData,
       headers: { "Content-Type": "multipart/form-data" },
     })
       .then(function (response) {
         // var LineChartData = response.data;
         // console.log(LineChartData);
-        var dateTime = response.data.Files[0]['file_date'];
+        // var dateTime = response.data.Files[0]['file_date'];
         // var Time = dateTime.split('');
         // console.log(Time);
         setRecentActivity([response.data.Files]);
-        console.log(typeof response.data.Files[0]['file_date']);
+        // console.log(typeof response.data.Files[0]['file_date']);
+        console.log(typeof response.data.Files[0]);
+        console.log(response.data.Files);
+      
         
       })
       .catch(function (response) {
@@ -114,7 +116,7 @@ function Dashboard() {
       });
     }
   useEffect(() => {
-    fetchRecentActivity(bodyFormData);
+    fetchRecentActivity(ActivityFormData);
   }, []);
 
   const files = [
@@ -127,10 +129,10 @@ function Dashboard() {
     { name: 'Free Space', value: 400 }
 ];
 const time = [
-  {name: 'March', students: 400},
-  {name: 'May', students: 700},
-  {name: 'Sept', students: 200},
-  {name: 'Dec', students: 1000}
+  {name: 'kapil', Used_Storage: 400},
+  {name: 'Balaji', Used_Storage: 700},
+  {name: 'Harish',Used_Storage: 200},
+  {name: 'Charan', Used_Storage: 1000}
 ];
 
 
@@ -179,29 +181,7 @@ const upload = [
   }
 ]
 
-// var calendar = [{
-//   "date": "2016-01-01",
-//   "total": 17164,
-//   "details": [{
-//     "name": "file 1",
-//     "date": "2016-01-01 12:30:45",
-//     "value": 9192
-//   }, {
-//     "name": "file 2",
-//     "date": "2016-01-01 13:37:00",
-//     "value": 6753
-//   },
-//   {
-//     "name": "file 3",
-//     "date": "2016-01-01 17:52:41",
-//     "value": 1219
-//   },
-//   {
-//     "name": "file 4",
-//     "date": "2016-01-01 17:52:41",
-//     "value": 1219
-//   }]
-// }]
+
 
 
 
@@ -236,7 +216,7 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
                                       // data = {Object.entries(PieChartValue).filter(([key]) => !['Unit'].includes(key)).map( ([key,value]) => value)}
                                       data={PieChartValue}
 
-                                    // data={PieChartValue.ChartValue}
+                                  
                                     cx="50%"
                                     cy="50%"
                                     labelLine={false}
@@ -250,7 +230,7 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
                                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                     ))} */}
                                     {PieChartValue.map((entry, index) => (<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />))}
-                                    {/* {PieChartValue.map( */}
+                                  
                                 </Pie>
                                 <Tooltip />
                             </PieChart>
@@ -262,16 +242,16 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
       data={BarChartValue}>
     <Bar dataKey="txt" fill="#FF69B4"></Bar>
     {/* <CartesianGrid stroke="#ccc" /> */}
-    <XAxis dataKey="BarChartValue" />
+    <XAxis dataKey="name" />
     <YAxis />
     <Tooltip cursor={false}/>
   </BarChart>
       </div>
       
      <div className={Style.Areachart}>
-      <p>Monthly Overview</p>
+      <p>User based Storage</p>
      <AreaChart width={400} height={196} margin={{ right:20}} data={time}>
-    <Area dataKey="students" fill="orange" stroke="orange" />
+    <Area dataKey="Used_Storage" fill="orange" stroke="orange" />
     {/* <CartesianGrid stroke="#ccc" /> */}
     <XAxis dataKey="name" />
     <YAxis/>
@@ -281,7 +261,7 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
 
      
      <div className={Style.Linechart}>
-      <p>Growth over Time</p>
+      <p>File Growth over Time</p>
      <LineChart width={770} height={290} data={LineChartValue}
   margin={{right: 20, left: 20, bottom: 5 }}>
   {/* <CartesianGrid strokeDasharray="3 3" /> */}
@@ -299,39 +279,16 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
         {RecentActivity.map(([key,value])=> <div className={Style.ActivityDiv}>
           You uploaded {value.file_name} {value.file_date}
         </div>) }
-        {/* <div className={Style.ActivityDiv}>
-          You uploaded 7 files 4 mins ago
-        </div> */}
-        {/* {RecentActivity.forEach((item,index)=>
-        <div key={index}><div>You Uploaded {item.file_name}</div></div>)}; */}
 
 
         
       <BarChart color={"white"} width={400} height={260} margin={{ right:20}} data={files}>
-        
-    {/* <Bar dataKey="students" fill="#8884d8">
-    {data.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                    ))}
-    </Bar> */}
-    {/* <CartesianGrid stroke="#ccc" /> */}
-    {/* <XAxis dataKey="name" />
-    <YAxis />
-    <Tooltip  cursor={false} /> */}
   </BarChart>
       </div>
 
-     
-     {/* <div className={Style.Calendarheatmap}>
-     <CalendarHeatmap
-  data={calendar}>
-</CalendarHeatmap>
-     </div> */}
-     
       </div>
 		</div>
-    {/* <div style={{marginLeft:"500px"}}><div>{PieChartValue.ChartValue}</div></div> */}
-    {/* <div style={{marginLeft:"500px"}}><div>{PieChartValue.ChartData}</div></div> */}
+    
 </>
   )
 }
