@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { setLoaderData } from '../redux/LoaderSlice';
 import { SearchDataState, setData } from '../redux/SearchDataSlice';
 import Style from './Header.module.css'
 
@@ -14,7 +15,7 @@ function Header() {
     
     const elasticSearch = async (e) =>{
 
-    
+      dispatch(setLoaderData(true))
       await axios.post("http://172.174.180.163:8081/OCRFileSearch",{
       index:"testing4",    
       query:e
@@ -25,7 +26,7 @@ function Header() {
           console.log(data)
       })
       setInput("")
-      
+      dispatch(setLoaderData(false))
   }
   
     const onEnter = (e) => {

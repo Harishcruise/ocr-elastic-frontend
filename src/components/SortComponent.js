@@ -19,6 +19,9 @@ import { setFileClassData } from '../redux/FileClassFilterSlice';
 import { setSortData , SortDataSate } from '../redux/SortSlice';
 import { DateSortDataState, setDateSortData } from '../redux/DateSortSlice';
 import dayjs from 'dayjs';
+import axios from 'axios';
+import { setData } from '../redux/SearchDataSlice';
+import { setLoaderData } from '../redux/LoaderSlice';
 function SortComponent() {
     const [startValue, setStartValue] = useState();
     const [endValue, setEndValue] = useState();
@@ -27,6 +30,7 @@ function SortComponent() {
     const [fileClass, setFileClass] = useState('');
     const [uploadedBy, setUploadedBy] = useState('');
     const [dateValue, setDateValue] = useState('');
+    
     const dispatch = useDispatch();
     const sortData = useSelector(SortDataSate)
     const dateSortData = useSelector(DateSortDataState)
@@ -37,6 +41,15 @@ function SortComponent() {
       startDate : startValue,
       endDate : endValue
     }))
+  }
+
+  const intialData = async()=>{
+    await axios.post("http://172.174.180.163:8081/getAllFiles",{
+      index:"testing4"
+    }).then((response)=>{
+      dispatch(setData(response.data.hits)) 
+      console.log(response)
+    })
   }
 
 
@@ -78,8 +91,6 @@ function SortComponent() {
           <MenuItem value={4}>Certifications</MenuItem>
           <MenuItem value={5}>Letter of credit</MenuItem>
           <MenuItem value={6}>Presentation</MenuItem>
-          {/* <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem> */}
         </Select>
       </FormControl>
     </Box>
@@ -100,22 +111,6 @@ function SortComponent() {
         </Select>
       </FormControl>
     </Box>
-
-    {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer  components={['DatePicker']}>
-        <DatePicker label="Start Date" value={value}
-          onChange={(newValue) =>{
-            console.log(newValue)
-            setValue(newValue)
-            var date = (newValue.$D.toString().length === 1) ? newValue.$D.toString().padStart(2,'0') : newValue.$D.toString()
-            var tempMonth = (newValue.$M + 1)
-            var month = (tempMonth.toString().length === 1) ? tempMonth.toString().padStart(2,'0') : tempMonth.toString()
-            var originalDate = ''+ date + "/" + month + "/" + newValue.$y;
-            console.log(originalDate)
-            setDateValue(originalDate)
-          }} />
-      </DemoContainer>
-    </LocalizationProvider> */}
 
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer  components={['DatePicker']}>
@@ -172,9 +167,12 @@ function SortComponent() {
       </div>
       </>) : (
         <div className={Style.sortCont} >
-        <div onClick={()=>{
+        <div onClick={async()=>{
               dispatch(setFileClassData(0))
               dispatch(setDateData(''))
+              dispatch(setLoaderData(true))
+              await intialData()
+              dispatch(setLoaderData(false))
         }} className={Style.resetBtn}>
                Reset
             </div>

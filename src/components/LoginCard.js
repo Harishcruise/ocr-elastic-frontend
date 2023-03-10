@@ -7,7 +7,7 @@ function LoginCard() {
   const navigate = useNavigate();
   const [username, setusername] = useState("");
   const [password, setpassword] = useState("");
-  const user = JSON.parse(localStorage.getItem("user"));
+  // const user = JSON.parse(localStorage.getItem("user"));
 
   var bodyFormData = new FormData();
   bodyFormData.append('username', username); //Current User
@@ -16,9 +16,9 @@ function LoginCard() {
     e.preventDefault();
     try {
       await AuthService.login(bodyFormData).then(
-        () => {
+        (user) => {
           if(user.data.status === "success"){
-          
+          console.log(user.data.status)
           navigate("Search");
           window.location.reload();
           }

@@ -9,12 +9,15 @@ import {FileClassFilterDataState} from '../redux/FileClassFilterSlice';
 import { SearchDataState , setData } from '../redux/SearchDataSlice';
 import axios from 'axios';
 import { SortDataSate } from '../redux/SortSlice';
+import { setLoaderData } from '../redux/LoaderSlice';
+import { LoaderDataState } from '../redux/LoaderSlice';
 function SearchPage() {
   const [loaderState,setLoaderState] = useState(true);
   const dispatch = useDispatch()
   const data = useSelector(SearchDataState)
   const dateData = useSelector(DateFilterDataState)
   const sortData = useSelector(SortDataSate)
+  const loaderData = useSelector(LoaderDataState)
   const FileClassFilterData = useSelector(FileClassFilterDataState)
 
   // axios.post("http://172.174.180.163:8081/getAllFiles",{
@@ -23,17 +26,19 @@ function SearchPage() {
   //   dispatch(setData(response.data.hits))
   //   setLoaderState(false)
   // })
-  setTimeout(()=>{
+  // setTimeout(()=>{
     
-    setLoaderState(false)
-  },[2500])
+  //   setLoaderState(false)
+  // },[2500])
   const intialData = async()=>{
+    dispatch(setLoaderData(true))
     await axios.post("http://172.174.180.163:8081/getAllFiles",{
       index:"testing4"
     }).then((response)=>{
       dispatch(setData(response.data.hits)) 
       console.log(response)
     })
+    dispatch(setLoaderData(false))
   }
 
   useEffect(()=>{
@@ -44,7 +49,7 @@ function SearchPage() {
   return (
     <div className={Style.container}>
     {
-      (loaderState) ? (<Loader />) : (
+      (loaderData) ? (<Loader />) : (
         <><SortComponent/>
         <div className= {Style.cols}>
       {
