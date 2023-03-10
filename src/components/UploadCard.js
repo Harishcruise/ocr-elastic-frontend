@@ -4,6 +4,7 @@ import axios from 'axios';
 import './UploadCard.css'
 import Loader from './Loader';
 import JSZip from 'jszip';
+import { useDispatch , useSelector } from 'react-redux';
 const MAX_COUNT = 100;
 function UploadCard() {
     const navigate = useNavigate()
@@ -15,6 +16,7 @@ function UploadCard() {
     const [successPage,setSuccessPage] = useState(false)
     const [data,setData] = useState()
     const [listFileState,setListFileState] = useState(false)
+
     
     // useEffect(()=>{
     //     var temp =[]
@@ -74,24 +76,25 @@ function UploadCard() {
             let filename = file.name
             zip.file(filename, file)
         }
-        zip.generateAsync({type:'blob'}).then((blobdata)=>{
+        zip.generateAsync({type:'blob'}).then(async(blobdata)=>{
             
             let zipblob = new Blob([blobdata])
             var reader = new FileReader();
             reader.readAsDataURL(zipblob); 
-            reader.onloadend = function() {
+            reader.onloadend = async function() {
             var base64data = reader.result;                
                 console.log(base64data);
                 var base64 = reader.result.split(',').pop();
                 var name = "compressed.zip"
+                var tempData = JSON.parse(localStorage.getItem("userCredentials"))
                 var obj = {
-                    username:"charan",
-                    password:"charanpwd",
-                    index:"testing2",
+                    username:"balaji",
+                    password:"balajipwd",
+                    index:tempData.username,
                     [name]:base64
                 }
                 console.log(obj)
-            axios.post("http://172.174.180.163:8500/users/AddFile",obj)
+            await axios.post("http://172.174.180.163:8500/users/AddFile",obj)
                 .then((response)=>{
             // console.log(data)
             console.log(response)

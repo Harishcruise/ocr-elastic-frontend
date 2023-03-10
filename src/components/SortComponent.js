@@ -16,20 +16,41 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useDispatch, useSelector } from 'react-redux';
 import { setDateData } from '../redux/DateFilterSlice';
 import { setFileClassData } from '../redux/FileClassFilterSlice';
-import { setSortData } from '../redux/SortSlice';
+import { setSortData , SortDataSate } from '../redux/SortSlice';
+import { DateSortDataState, setDateSortData } from '../redux/DateSortSlice';
 import dayjs from 'dayjs';
+import axios from 'axios';
+import { setData } from '../redux/SearchDataSlice';
+import { setLoaderData } from '../redux/LoaderSlice';
 function SortComponent() {
-    const [value, setValue] = React.useState(dayjs());
+    const [startValue, setStartValue] = useState();
+    const [endValue, setEndValue] = useState();
     const [sortState, setSortState] = useState(false)
     const [sortState2, setSortState2] = useState(false)
     const [fileClass, setFileClass] = useState('');
     const [uploadedBy, setUploadedBy] = useState('');
     const [dateValue, setDateValue] = useState('');
+    
     const dispatch = useDispatch();
+    const sortData = useSelector(SortDataSate)
+    const dateSortData = useSelector(DateSortDataState)
 
   const applyFilter = () =>{
     dispatch(setFileClassData(fileClass))
-    dispatch(setDateData(dateValue))
+    dispatch(setDateData({
+      startDate : startValue,
+      endDate : endValue
+    }))
+  }
+
+  const intialData = async()=>{
+    var tempData = JSON.parse(localStorage.getItem("userCredentials"))
+    await axios.post("http://172.174.180.163:8081/getAllFiles",{
+      index:tempData.username
+    }).then((response)=>{
+      dispatch(setData(response.data.hits)) 
+      console.log(response)
+    })
   }
 
 
@@ -47,7 +68,6 @@ function SortComponent() {
             
             <div className={Style.icon} onClick={()=>{
               setSortState(false)
-              // dispatch(setFileClass(0))
             }}>
             <VscChromeClose size={20} />
             </div>
@@ -72,8 +92,6 @@ function SortComponent() {
           <MenuItem value={4}>Certifications</MenuItem>
           <MenuItem value={5}>Letter of credit</MenuItem>
           <MenuItem value={6}>Presentation</MenuItem>
-          {/* <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem> */}
         </Select>
       </FormControl>
     </Box>
@@ -97,17 +115,24 @@ function SortComponent() {
 
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer  components={['DatePicker']}>
-        <DatePicker label="Uploaded Date" value={value}
+        <DatePicker label="Start Date" value={startValue} format='DD / MM / YYYY'
           onChange={(newValue) =>{
             console.log(newValue)
-            setValue(newValue)
-            var date = (newValue.$D.toString().length === 1) ? newValue.$D.toString().padStart(2,'0') : newValue.$D.toString()
-            var tempMonth = (newValue.$M + 1)
-            var month = (tempMonth.toString().length === 1) ? tempMonth.toString().padStart(2,'0') : tempMonth.toString()
-            var originalDate = ''+ date + "/" + month + "/" + newValue.$y;
-            console.log(originalDate)
-            setDateValue(originalDate)
+            setStartValue(newValue)
+            
           }} />
+      </DemoContainer>
+    </LocalizationProvider>
+
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer  components={['DatePicker']}> 
+        <DatePicker label="End Date" value={endValue} format='DD / MM / YYYY'
+          onChange={(newValue) =>{
+            console.log(newValue)
+            setEndValue(newValue)
+          }} 
+
+          />
       </DemoContainer>
     </LocalizationProvider>
 
@@ -128,15 +153,30 @@ function SortComponent() {
             </div>
             </div>
       <div className={Style.selectContainer}>
-      <div className={Style.uploadBtn} style={{gap:"10px"}} onClick={()=>(dispatch(setSortData('Ascending')))}>
-            <FaSortAlphaDown />  Ascending
+      <div className={Style.uploadBtn} style={{gap:"10px"}} onClick={()=>(dispatch(setSortData()))}>
+            {(sortData) === "All" ? "" : (sortData) === "Ascending" ? <FaSortAlphaDownAlt/> : <FaSortAlphaDown /> }  File Name
       </div>
-      <div className={Style.uploadBtn} style={{gap:"10px"}} onClick={()=>(dispatch(setSortData('Descending')))}>
+      {/* <div className={Style.uploadBtn} style={{gap:"10px"}} onClick={()=>(dispatch(setSortData('Descending')))}>
             <FaSortAlphaDownAlt />  Descending
+      </div> */}
+      <div className={Style.uploadBtn} style={{gap:"10px"}} onClick={()=>(dispatch(setDateSortData()))}>
+          {(dateSortData) === "All" ? "Earlier Uploaded" : (dateSortData) === "DateAscending" ? "Recent Uploaded" : "Sort by Date" }
       </div>
+      {/* <div className={Style.uploadBtn} style={{gap:"10px"}} onClick={()=>(dispatch(setSortData('DateDescending')))}>
+          Recently Uploaded
+      </div> */}
       </div>
       </>) : (
         <div className={Style.sortCont} >
+        <div onClick={async()=>{
+              dispatch(setFileClassData(0))
+              dispatch(setDateData(''))
+              dispatch(setLoaderData(true))
+              await intialData()
+              dispatch(setLoaderData(false))
+        }} className={Style.resetBtn}>
+               Reset
+            </div>
         <div className={Style.sortIcon} onClick={()=>{
           setSortState2(true)
         }} >

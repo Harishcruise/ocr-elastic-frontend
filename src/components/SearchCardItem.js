@@ -6,16 +6,17 @@ function SearchCardItem({fileName,dataBase64,type,fileClass,blobUrl,uploadedBy,u
   var date = uploadedDate.split(' ')
     let fileString = {
         file_name: fileName,
-        file:`data:${type};base64,${dataBase64}`
+        // file:`data:${type};base64,${dataBase64}`
+        file: dataBase64
       }
-    function downloadPDF(file) {
-        const pdfLink = file.file;
-        const anchorElement = document.createElement('a');
-        const fileName = `${file.file_name}`;
-        anchorElement.href = pdfLink;
-        anchorElement.download = fileName;
-        anchorElement.click();
-    }
+    // function downloadPDF(file) {
+    //     const pdfLink = file.file;
+    //     const anchorElement = document.createElement('a');
+    //     const fileName = `${file.file_name}`;
+    //     anchorElement.href = pdfLink;
+    //     anchorElement.download = fileName;
+    //     anchorElement.click();
+    // }
 
     function dataURLtoFile(dataurl, filename) {
  
@@ -32,22 +33,27 @@ function SearchCardItem({fileName,dataBase64,type,fileClass,blobUrl,uploadedBy,u
       return new File([u8arr], filename, {type:mime});
   }
 
-    function previewFile() {
-      // var files = dataURLtoFile(fileString.file,fileString.file_name);
-      // console.log(files)
-      // // var base64 = "data:"+type+";base64,"+dataBase64  ;
-      // var fileURL = URL.createObjectURL(files);
+    function downloadFile() {
+      
       window.open(blobUrl);
+    }
+
+    function previewFile() {
+      var files = dataURLtoFile(fileString.file,fileString.file_name);
+      console.log(files)
+      // var base64 = "data:"+type+";base64,"+dataBase64  ;
+      var fileURL = URL.createObjectURL(files);
+      window.open(fileURL);
     }
 
   return (
     <>
-			<div className={Style.col} ontouchstart="this.classNameList.toggle('hover');">
+			<div className={Style.col} onClick={previewFile} ontouchstart="this.classNameList.toggle('hover');">
 				<div className= {Style.container}>
 					<div className={Style.front} >
                         <BsFillFileEarmarkFill color="#80AFE7" size={120} />
 
-                        <h4>{fileName}</h4>
+                        <p style={{fontSize:"16px"}}>{fileName}</p>
 					</div>
 					<div className={Style.back}>
 					<div className={Style.inner}>
@@ -60,8 +66,9 @@ function SearchCardItem({fileName,dataBase64,type,fileClass,blobUrl,uploadedBy,u
                           <p>
                             Uploaded By : {uploadedBy}
                           </p>
-
-                          <BsFillCloudDownloadFill style={{marginLeft:"170px",marginTop:"110px"}} size={20} onClick={previewFile} />
+                          <div className={Style.downloadBtn}>
+                          <BsFillCloudDownloadFill  size={20} onClick={downloadFile} />
+                          </div>
                         </div>
 					</div>
 				</div>

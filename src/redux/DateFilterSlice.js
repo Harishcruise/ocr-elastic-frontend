@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const DateFilterSlice = createSlice({
     name:"DateFilterData",
     initialState:{
-        value: 0
+        value: ''
     },
     reducers:{
         setDateData: (state,action) =>{

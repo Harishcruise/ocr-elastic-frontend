@@ -3,11 +3,17 @@ import { createSlice } from "@reduxjs/toolkit";
 export const SortSlice = createSlice({
     name:"SortData",
     initialState:{
-        value: ''
+        value: 'All'
     },
     reducers:{
         setSortData: (state,action) =>{
-            state.value = action.payload;
+            if(state.value === "All"){
+                state.value = "Ascending"
+            }else if(state.value === "Ascending"){
+                state.value = "Descending"
+            }else if(state.value === "Descending"){
+                state.value = "All"
+            }
         }
     }
 })
