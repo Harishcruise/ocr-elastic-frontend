@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import Style from './Dashboard.module.css';
 import { PieChart, Pie, Legend, Sector, Cell, ResponsiveContainer, BarChart, Bar, CartesianGrid, XAxis, YAxis, LineChart, Line, Tooltip, AreaChart,
@@ -6,7 +6,116 @@ import { PieChart, Pie, Legend, Sector, Cell, ResponsiveContainer, BarChart, Bar
 import CalendarHeatmap from 'reactjs-calendar-heatmap'
 
 function Dashboard() {
-   
+  const [BarChartValue, setBarChartValue] = useState([]);
+  const [PieChartValue, setPieChartValue] = useState([]);
+  const [LineChartValue, setLineChartValue] = useState([]);
+  const [RecentActivity,setRecentActivity] = useState([]);
+
+  var bodyFormData = new FormData();
+  bodyFormData.append('username', 'kapil'); //Current User
+  bodyFormData.append('password', 'kapilpwd'); //Current Password
+
+  const fetchPiechartData = (bodyFormData) => {
+    return axios({
+      method: "post",
+      url: "http://172.174.180.163:8500/users/StorageDetails",
+      data: bodyFormData,
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+      .then(function (response) {
+        // var ChartValue = response.data.Allocated;
+        var ChartData = response.data;
+        console.log(ChartData);
+        // setPieChartValue({...PieChartValue, ChartValue});
+        setPieChartValue([response.data]);
+        console.log(response.data);
+        
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+    }
+  useEffect(() => {
+    fetchPiechartData(bodyFormData);
+  }, []);
+
+
+  
+
+  const fetchBarchartData = (bodyFormData) => {
+    return axios({
+      method: "post",
+      url: "http://172.174.180.163:8500/stats/TypeBasedFrequency",
+      data: bodyFormData,
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+      .then(function (response) {
+        // var BarChartData = response.data.txt;
+        // console.log(BarChartValue);
+        setBarChartValue([response.data]);
+        console.log(response.data);
+        
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+    }
+  useEffect(() => {
+    fetchBarchartData(bodyFormData);
+  }, []);
+
+  
+
+  const fetchLinechartData = (bodyFormData) => {
+    return axios({
+      method: "post",
+      url: "http://172.174.180.163:8500/stats/DateBasedFrequency",
+      data: bodyFormData,
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+      .then(function (response) {
+        // var LineChartData = response.data;
+        // console.log(LineChartData);
+        setLineChartValue([response.data]);
+        console.log(response.data);
+        
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+    }
+  useEffect(() => {
+    fetchLinechartData(bodyFormData);
+  }, []);
+
+  var bodyFormData = new FormData();
+  bodyFormData.append('username', 'charan'); //Current User
+  bodyFormData.append('password', 'charanpwd'); 
+
+  const fetchRecentActivity = (bodyFormData) => {
+    return axios({
+      method: "post",
+      url: "http://172.174.180.163:8500/users/GetMetaData",
+      data: bodyFormData,
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+      .then(function (response) {
+        // var LineChartData = response.data;
+        // console.log(LineChartData);
+        var dateTime = response.data.Files[0]['file_date'];
+        // var Time = dateTime.split('');
+        // console.log(Time);
+        setRecentActivity([response.data.Files]);
+        console.log(typeof response.data.Files[0]['file_date']);
+        
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+    }
+  useEffect(() => {
+    fetchRecentActivity(bodyFormData);
+  }, []);
 
   const files = [
     {name: 'pdf', students: 80},
@@ -95,6 +204,8 @@ const upload = [
 // }]
 
 
+
+
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 const RADIAN = Math.PI / 180;
@@ -112,26 +223,34 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
 
   return (
     <>
+    
     <div style={{paddingTop:"50px"}}>
 
   <div className= {Style.wrapper}>
+  
   <div className= {Style.piechart}>
     <p>User Storage</p>
                             <PieChart width={300} height={196}>
                                 <Legend wrapperStyle={{bottom:9, left: 45}} layout="horizontal" horizontal="bottom" align="bottom" />
-                                <Pie
-                                    data={data}
+                                <Pie   
+                                      // data = {Object.entries(PieChartValue).filter(([key]) => !['Unit'].includes(key)).map( ([key,value]) => value)}
+                                      data={PieChartValue}
+
+                                    // data={PieChartValue.ChartValue}
                                     cx="50%"
                                     cy="50%"
                                     labelLine={false}
                                     label={renderCustomizedLabel}
                                     outerRadius={80}
                                     fill="#8884d8"
-                                    dataKey="value"
+                                    dataKey= "Allocated"
+                                    // nameKey="Allocated"
                                 >
-                                    {data.map((entry, index) => (
+                                  {/* {[PieChartValue.Allocated, PieChartValue.Used].map((entry, index) => (
                                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                    ))}
+                                    ))} */}
+                                    {PieChartValue.map((entry, index) => (<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />))}
+                                    {/* {PieChartValue.map( */}
                                 </Pie>
                                 <Tooltip />
                             </PieChart>
@@ -139,10 +258,11 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
 
       <div className={Style.Barchart}>
         <p>Uploaded Files based on file type</p>
-      <BarChart width={450} height={196} margin={{ right:20}} data={files}>
-    <Bar dataKey="students" fill="#FF69B4"></Bar>
+      <BarChart width={450} height={196} margin={{ right:20}} 
+      data={BarChartValue}>
+    <Bar dataKey="txt" fill="#FF69B4"></Bar>
     {/* <CartesianGrid stroke="#ccc" /> */}
-    <XAxis dataKey="name" />
+    <XAxis dataKey="BarChartValue" />
     <YAxis />
     <Tooltip cursor={false}/>
   </BarChart>
@@ -162,23 +282,31 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
      
      <div className={Style.Linechart}>
       <p>Growth over Time</p>
-     <LineChart width={770} height={290} data={upload}
+     <LineChart width={770} height={290} data={LineChartValue}
   margin={{right: 20, left: 20, bottom: 5 }}>
   {/* <CartesianGrid strokeDasharray="3 3" /> */}
-  <XAxis dataKey="name" />
+  <XAxis dataKey="20.01.2022" />
   <YAxis />
   <Tooltip />
   <Legend />
-  <Line type="monotone" dataKey="Upload Rate" stroke="#8B008B" />
-  {/* <Line type="monotone" dataKey="uv" stroke="#82ca9d" /> */}
+  <Line type="monotone" dataKey="20.01.2022" stroke="#8B008B" />
+  <Line type="monotone" dataKey="21.01.2022" stroke="#82ca9d" />
 </LineChart>
      </div>
 
      <div className={Style.Activity}>
         <p>Recent Activity</p>
-        <div className={Style.ActivityDiv}>
+        {RecentActivity.map(([key,value])=> <div className={Style.ActivityDiv}>
+          You uploaded {value.file_name} {value.file_date}
+        </div>) }
+        {/* <div className={Style.ActivityDiv}>
           You uploaded 7 files 4 mins ago
-        </div>
+        </div> */}
+        {/* {RecentActivity.forEach((item,index)=>
+        <div key={index}><div>You Uploaded {item.file_name}</div></div>)}; */}
+
+
+        
       <BarChart color={"white"} width={400} height={260} margin={{ right:20}} data={files}>
         
     {/* <Bar dataKey="students" fill="#8884d8">
@@ -202,7 +330,8 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
      
       </div>
 		</div>
-
+    {/* <div style={{marginLeft:"500px"}}><div>{PieChartValue.ChartValue}</div></div> */}
+    {/* <div style={{marginLeft:"500px"}}><div>{PieChartValue.ChartData}</div></div> */}
 </>
   )
 }
