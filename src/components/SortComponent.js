@@ -16,7 +16,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useDispatch, useSelector } from 'react-redux';
 import { setDateData } from '../redux/DateFilterSlice';
 import { setFileClassData } from '../redux/FileClassFilterSlice';
-import { setSortData } from '../redux/SortSlice';
+import { setSortData , SortDataSate } from '../redux/SortSlice';
+import { DateSortDataState, setDateSortData } from '../redux/DateSortSlice';
 import dayjs from 'dayjs';
 function SortComponent() {
     const [value, setValue] = React.useState(dayjs());
@@ -26,6 +27,8 @@ function SortComponent() {
     const [uploadedBy, setUploadedBy] = useState('');
     const [dateValue, setDateValue] = useState('');
     const dispatch = useDispatch();
+    const sortData = useSelector(SortDataSate)
+    const dateSortData = useSelector(DateSortDataState)
 
   const applyFilter = () =>{
     dispatch(setFileClassData(fileClass))
@@ -128,12 +131,18 @@ function SortComponent() {
             </div>
             </div>
       <div className={Style.selectContainer}>
-      <div className={Style.uploadBtn} style={{gap:"10px"}} onClick={()=>(dispatch(setSortData('Ascending')))}>
-            <FaSortAlphaDown />  Ascending
+      <div className={Style.uploadBtn} style={{gap:"10px"}} onClick={()=>(dispatch(setSortData()))}>
+            {(sortData) === "All" ? "" : (sortData) === "Ascending" ? <FaSortAlphaDownAlt/> : <FaSortAlphaDown /> }  File Name
       </div>
-      <div className={Style.uploadBtn} style={{gap:"10px"}} onClick={()=>(dispatch(setSortData('Descending')))}>
+      {/* <div className={Style.uploadBtn} style={{gap:"10px"}} onClick={()=>(dispatch(setSortData('Descending')))}>
             <FaSortAlphaDownAlt />  Descending
+      </div> */}
+      <div className={Style.uploadBtn} style={{gap:"10px"}} onClick={()=>(dispatch(setDateSortData()))}>
+          {(dateSortData) === "All" ? "Earlier Uploaded" : (dateSortData) === "DateAscending" ? "Recent Uploaded" : "Sort by Date" }
       </div>
+      {/* <div className={Style.uploadBtn} style={{gap:"10px"}} onClick={()=>(dispatch(setSortData('DateDescending')))}>
+          Recently Uploaded
+      </div> */}
       </div>
       </>) : (
         <div className={Style.sortCont} >

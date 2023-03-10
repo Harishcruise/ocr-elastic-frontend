@@ -85,9 +85,9 @@ function UploadCard() {
                 var base64 = reader.result.split(',').pop();
                 var name = "compressed.zip"
                 var obj = {
-                    username:"charan",
-                    password:"charanpwd",
-                    index:"testing2",
+                    username:"balaji",
+                    password:"balajipwd",
+                    index:"testing4",
                     [name]:base64
                 }
                 console.log(obj)

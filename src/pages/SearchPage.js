@@ -29,7 +29,7 @@ function SearchPage() {
   },[2500])
   const intialData = async()=>{
     await axios.post("http://172.174.180.163:8081/getAllFiles",{
-      index:"testing2"
+      index:"testing4"
     }).then((response)=>{
       dispatch(setData(response.data.hits)) 
       console.log(response)
@@ -95,7 +95,14 @@ function SearchPage() {
         }).sort((a, b) => {
     let fa = a._source.filename.toLowerCase(),
         fb = b._source.filename.toLowerCase();
-
+    let tempA  = a._source.fileUploadedDate.split(' ')[0],
+        tempB =  b._source.fileUploadedDate.split(' ')[0];
+    
+    let tempA1 = tempA.split("/").reverse(),
+        tempB1 = tempB.split("/").reverse()
+     let da = new Date(""+tempA1[0]+"-"+tempA1[1]+"-"+tempA1[2]),
+        db = new Date(""+tempB1[0]+"-"+tempB1[1]+"-"+tempB1[2]);
+    
     if(sortData === 'Ascending'){
       if (fa < fb) {
       return -1;
@@ -113,11 +120,19 @@ function SearchPage() {
         return 1;
     }
     }
+
+    if(sortData === 'DateAscending'){
+      return da - db;
+    }
+
+    if(sortData === 'DateDescending'){
+      return db - da;
+    }
     return 0;
 }).map((val)=>{
           console.log(val)
           var ext = String(val._source.filename).split('.').pop()
-          return(<SearchCardItem fileName={val._source.filename} type={ext} fileClass={val._source.fileClassification} blobUrl={val._source.fileURL} uploadedBy={val._source.fileUploadedBy} uploadedDate={val._source.fileUploadedDate} />)
+          return(<SearchCardItem fileName={val._source.filename} type={ext} fileClass={val._source.fileClassification} dataBase64={val._source.fileBase64} blobUrl={val._source.fileURL} uploadedBy={val._source.fileUploadedBy} uploadedDate={val._source.fileUploadedDate} />)
         })
       }
       </div>
