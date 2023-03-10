@@ -2,11 +2,16 @@ import React, { useEffect, useState } from 'react'
 import Style from './SideNavBar.module.css'
 import { FiMonitor,FiSearch,FiLogOut, FiInfo} from "react-icons/fi";
 import { Link, useLocation } from 'react-router-dom';
+import AuthService from "../services/auth.service";
 
 function SideNavBar() {
   const [navState,setNavState] = useState("Search")
   const location = useLocation(); 
   const { pathname } = location;
+
+  const logOut = () => {
+    AuthService.logout();
+  };
 
   useEffect(()=>{
     if(pathname.includes('/Home')){
@@ -40,7 +45,7 @@ function SideNavBar() {
     </Link> */}
 
    <Link to='/'>
-    <div className={Style.icon} style={{marginTop:"300px"}}>
+    <div onClick={logOut} className={Style.icon} style={{marginTop:"300px"}}>
         <FiLogOut size={25} />
     </div>
     </Link>
