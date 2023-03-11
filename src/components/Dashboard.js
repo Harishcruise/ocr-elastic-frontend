@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import { LoaderDataState,setLoaderData } from '../redux/LoaderSlice.js';
 import axios from 'axios';
 import Style from './Dashboard.module.css';
 import { PieChart, Pie, Legend, Sector, Cell, ResponsiveContainer, BarChart, Bar, CartesianGrid, XAxis, YAxis, LineChart, Line, Tooltip, AreaChart,
@@ -6,20 +7,25 @@ import { PieChart, Pie, Legend, Sector, Cell, ResponsiveContainer, BarChart, Bar
 import user from "../assets/user.png";
 import { FiUser} from "react-icons/fi";
 import datetime from 'react-datetime';
+import {useSelector ,useDispatch} from 'react-redux';
 
 function Dashboard() {
+
+  var userCredentials = JSON.parse(localStorage.getItem("userCredentials"))
   const [BarChartValue, setBarChartValue] = useState([]);
   const [PieChartValue, setPieChartValue] = useState([]);
   const [LineChartValue, setLineChartValue] = useState([]);
   const [AreaChartValue, setAreaChartValue] = useState([]);
   
+  const dispatch = useDispatch();
+  const loaderData = useSelector(LoaderDataState);
 
   var bodyFormData = new FormData();
-  bodyFormData.append('username', 'kapil'); //Current User
-  bodyFormData.append('password', 'kapilpwd'); //Current Password
+  bodyFormData.append('username', userCredentials.username); //Current User
+  bodyFormData.append('password', userCredentials.password); //Current Password
 
-  const fetchPiechartData = (bodyFormData) => {
-    return axios({
+  const fetchPiechartData = async (bodyFormData) => {
+    return await axios({
       method: "post",
       url: "http://172.174.180.163:8500/users/StorageDetails",
       data: bodyFormData,
@@ -39,14 +45,20 @@ function Dashboard() {
       });
     }
   useEffect(() => {
+    dispatch(setLoaderData(true))
     fetchPiechartData(bodyFormData);
+    fetchAreachartData(bodyFormData);
+    fetchBarchartData(bodyFormData);
+    fetchLinechartData(bodyFormData);
+    fetchRecentActivity(bodyFormData);
+    dispatch(setLoaderData(false))
   }, []);
 
 
   
 
-  const fetchBarchartData = (bodyFormData) => {
-    return axios({
+  const fetchBarchartData = async (bodyFormData) => {
+    return await axios({
       method: "post",
       url: "http://172.174.180.163:8500/stats/TypeBasedFrequency",
       data: bodyFormData,
@@ -63,19 +75,16 @@ function Dashboard() {
         console.log(response);
       });
     }
-  useEffect(() => {
-    fetchBarchartData(bodyFormData);
-  }, []);
+  // useEffect(() => {
+  //   fetchBarchartData(bodyFormData);
+  // }, []);
   
-  var AreaFormData = new FormData();
-  AreaFormData.append('username', 'admin'); //Current User
-  AreaFormData.append('password', 'admin'); //Current Password
 
-  const fetchAreachartData = (AreaFormData) => {
-    return axios({
+  const fetchAreachartData = async (bodyFormData) => {
+    return await axios({
       method: "post",
       url: "http://172.174.180.163:8500/users/GetAll",
-      data: AreaFormData,
+      data: bodyFormData,
       headers: { "Content-Type": "multipart/form-data" },
     })
       .then(function (response) {
@@ -89,20 +98,17 @@ function Dashboard() {
         console.log(response);
       });
     }
-  useEffect(() => {
-    fetchAreachartData(AreaFormData);
-  }, []);
+  // useEffect(() => {
+  //   fetchAreachartData(bodyFormData);
+  // }, []);
 
   
-  var LineFormData = new FormData();
-  LineFormData.append('username', 'balaji'); //Current User
-  LineFormData.append('password', 'balajipwd'); //Current Password
 
-  const fetchLinechartData = (LineFormData) => {
-    return axios({
+  const fetchLinechartData = async (bodyFormData) => {
+    return await axios({
       method: "post",
       url: "http://172.174.180.163:8500/stats/DateBasedFrequency",
-      data: LineFormData,
+      data: bodyFormData,
       headers: { "Content-Type": "multipart/form-data" },
     })
       .then(function (response) {
@@ -116,35 +122,20 @@ function Dashboard() {
         console.log(response);
       });
     }
-  useEffect(() => {
-    fetchLinechartData(LineFormData);
-  }, []);
-
-  var ActivityFormData = new FormData();
-  ActivityFormData.append('username', 'charan'); //Current User
-  ActivityFormData.append('password', 'charanpwd'); 
+  // useEffect(() => {
+  //   fetchLinechartData(bodyFormData);
+  // }, []);
 
 
   const [RecentActivity,setRecentActivity] = useState([]);
-  const fetchRecentActivity = (ActivityFormData) => {
-    return axios({
+  const fetchRecentActivity = async (bodyFormData) => {
+    return await axios({
       method: "post",
       url: "http://172.174.180.163:8500/users/GetMetaData",
-      data: ActivityFormData,
+      data: bodyFormData,
       headers: { "Content-Type": "multipart/form-data" },
     })
       .then(function (response) {
-        // var string = response.data.Files[0]['file_date'];
-        // console.log(string);
-        // const dateTime = Date(string);
-        // console.log(dateTime);
-        // var d2 = new Date()
-        // console.log(d2);
-        // var currTime = d2.getTime();
-        // console.log(currTime);
-        
-        // var diff = Math.floor((dateTime - currTime)/(24*3600*1000));
-        // console.log(diff);
 
        setRecentActivity(response.data.Files);
         console.log(response.data.Files);
@@ -155,9 +146,9 @@ function Dashboard() {
         console.log(response);
       });
     }
-  useEffect(() => {
-    fetchRecentActivity(ActivityFormData);
-  }, []);
+  // useEffect(() => {
+  //   fetchRecentActivity(bodyFormData);
+  // }, []);
 
 
 
@@ -278,17 +269,24 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
                             </PieChart>
 			</div>
 
+
+  
       <div className={Style.Barchart}>
         <p>Uploaded Files based on file type</p>
+        {/* { BarChartValue.length === 0 ? "No Data Found" : */}
       <BarChart width={450} height={196} margin={{ right:20}} 
       data={BarChartValue}>
-    <Bar dataKey="txt" fill="#FF69B4"></Bar>
+    <Bar dataKey="png" fill="#FF69B4"></Bar>
     {/* <CartesianGrid stroke="#ccc" /> */}
     <XAxis dataKey="name" />
     <YAxis />
     <Tooltip cursor={false}/>
   </BarChart>
+  {/* } */}
       </div>
+
+
+
       
      <div className={Style.Areachart}>
       <p>Users based Storage</p>
@@ -307,25 +305,30 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
      <LineChart width={770} height={290} data={LineChartValue}
   margin={{right: 20, left: 20, bottom: 5 }}>
   {/* <CartesianGrid strokeDasharray="3 3" /> */}
-  <XAxis dataKey="09/03/2023 16:12:38" />
+  <XAxis dataKey="11/03/2023 09:16:53" />
   <YAxis />
   <Tooltip />
   <Legend />
-  <Line type="monotone" dataKey="09/03/2023 16:12:38" stroke="#8B008B" />
-  <Line type="monotone" dataKey="10/03/2023 12:39:42" stroke="#82ca9d" />
+  <Line type="monotone" dataKey="11/03/2023 09:16:53" stroke="#8B008B" />
+  {/* <Line type="monotone" dataKey="10/03/2023 12:39:42" stroke="#82ca9d" /> */}
 </LineChart>
      </div>
 
      <div className={Style.Activity}>
         <p>Recent Activity</p>
         {
-        RecentActivity.map((file, index)=>
-          <div className={Style.ActivityDiv} key={index} >
+        RecentActivity.map((file, index)=>{
+        if(index >= 10){
+          return;
+        }
+        return <div className={Style.ActivityDiv} key={index} >
             <img className={Style.User} src={user} />
             <p className={Style.Log}> You uploaded {file.file_name} on {file.file_date}</p>
           </div>
-          ) 
+ } )
       }
+
+
     
       </div>
 
