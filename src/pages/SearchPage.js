@@ -21,16 +21,9 @@ function SearchPage() {
   const loaderData = useSelector(LoaderDataState)
   const FileClassFilterData = useSelector(FileClassFilterDataState)
   const uploadedByFilterData = useSelector(UploadedByFilterDataState)
-  // axios.post("http://172.174.180.163:8081/getAllFiles",{
-  //   index:"ocrfilestorage"
-  // }).then((response)=>{
-  //   dispatch(setData(response.data.hits))
-  //   setLoaderState(false)
-  // })
-  // setTimeout(()=>{
-    
-  //   setLoaderState(false)
-  // },[2500])
+  const [uploadedByUserValue, setUploadedByUserValue] = useState([])
+ 
+
   const intialData = async()=>{
     dispatch(setLoaderData(true))
     var tempData = JSON.parse(localStorage.getItem("userCredentials"))
@@ -46,13 +39,30 @@ function SearchPage() {
   useEffect(()=>{
     // setLoaderState(true)
     intialData()
+    var AreaFormData = new FormData();
+    AreaFormData.append('username', 'admin'); //Current User
+    AreaFormData.append('password', 'admin');
+    axios({
+      method: "post",
+      url: "http://172.174.180.163:8500/users/GetAll",
+      data: AreaFormData,
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+      .then(function (response) {
+        console.log(response.data);
+        setUploadedByUserValue(response.data)
+        
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
     // setLoaderState(false)
   },[])
   return (
     <div className={Style.container}>
     {
       (loaderData) ? (<Loader />) : (
-        <><SortComponent/>
+        <><SortComponent uplodedUsername={uploadedByUserValue}/>
         <div className= {Style.cols}>
       {
         data.filter((val)=>{
@@ -145,7 +155,6 @@ function SearchPage() {
     }
     return 0;
 }).map((val)=>{
-          console.log(val)
           var ext = String(val._source.filename).split('.').pop()
           return(<SearchCardItem fileName={val._source.filename} type={ext} fileClass={val._source.fileClassification} dataBase64={val._source.fileBase64} blobUrl={val._source.fileURL} uploadedBy={val._source.fileUploadedBy} uploadedDate={val._source.fileUploadedDate} />)
         })

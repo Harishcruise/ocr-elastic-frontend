@@ -23,7 +23,7 @@ import axios from 'axios';
 import { SearchDataState, setData } from '../redux/SearchDataSlice';
 import { setLoaderData } from '../redux/LoaderSlice';
 import { setUploadedByFilterData } from '../redux/UploadedByFilterSlice';
-function SortComponent() {
+function SortComponent({uplodedUsername}) {
     const [startValue, setStartValue] = useState();
     const [endValue, setEndValue] = useState();
     const [sortState, setSortState] = useState(false)
@@ -31,7 +31,7 @@ function SortComponent() {
     const [fileClass, setFileClass] = useState(0);
     const [uploadedBy, setUploadedBy] = useState('');
     const [dateValue, setDateValue] = useState('');
-    const [uploadedByUserValue, setUploadedByUserValue] = useState([])
+    // const [uploadedByUserValue, setUploadedByUserValue] = useState([])
     
     const dispatch = useDispatch();
     const sortData = useSelector(SortDataSate)
@@ -57,25 +57,25 @@ function SortComponent() {
     })
   }
 
-  useEffect(()=>{
-    var AreaFormData = new FormData();
-    AreaFormData.append('username', 'admin'); //Current User
-    AreaFormData.append('password', 'admin');
-    axios({
-      method: "post",
-      url: "http://172.174.180.163:8500/users/GetAll",
-      data: AreaFormData,
-      headers: { "Content-Type": "multipart/form-data" },
-    })
-      .then(function (response) {
-        console.log(response.data);
-        setUploadedByUserValue(response.data)
+  // useEffect(()=>{
+  //   var AreaFormData = new FormData();
+  //   AreaFormData.append('username', 'admin'); //Current User
+  //   AreaFormData.append('password', 'admin');
+  //   axios({
+  //     method: "post",
+  //     url: "http://172.174.180.163:8500/users/GetAll",
+  //     data: AreaFormData,
+  //     headers: { "Content-Type": "multipart/form-data" },
+  //   })
+  //     .then(function (response) {
+  //       console.log(response.data);
+  //       setUploadedByUserValue(response.data)
         
-      })
-      .catch(function (response) {
-        console.log(response);
-      });
-  },[])
+  //     })
+  //     .catch(function (response) {
+  //       console.log(response);
+  //     });
+  // },[])
 
 
   const handleChange = (event) => {
@@ -130,7 +130,7 @@ function SortComponent() {
           onChange={handleChange}
         > 
           {
-            uploadedByUserValue.map((val)=> <MenuItem value={val.username}>{val.username}</MenuItem>)
+            uplodedUsername.map((val)=> <MenuItem value={val.username}>{val.username}</MenuItem>)
           }
           {/* <MenuItem value={20}>Twenty</MenuItem>
           <MenuItem value={30}>Thirty</MenuItem> */}

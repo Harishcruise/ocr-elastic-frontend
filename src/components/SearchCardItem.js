@@ -2,7 +2,6 @@ import React from 'react'
 import { BsFillCloudDownloadFill, BsFillFileEarmarkFill } from 'react-icons/bs'
 import Style from './SearchCardItem.module.css'
 function SearchCardItem({fileName,dataBase64,type,fileClass,blobUrl,uploadedBy,uploadedDate}) {
-  console.log(type)
   var date = uploadedDate.split(' ')
     let fileString = {
         file_name: fileName,

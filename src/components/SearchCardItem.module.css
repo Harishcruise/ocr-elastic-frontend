@@ -24,8 +24,20 @@ h1{
         -ms-flex-pack: center;
             justify-content: center;
   }
+
+  @keyframes top{
+    0% {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
   
   .col{
+    animation: 0.5s ease-out forwards 1 top;
     width: calc(20% - 2rem);
     margin: 1rem;
     cursor: pointer;
