@@ -20,7 +20,7 @@ import { setSortData , SortDataSate } from '../redux/SortSlice';
 import { DateSortDataState, setDateSortData } from '../redux/DateSortSlice';
 import dayjs from 'dayjs';
 import axios from 'axios';
-import { setData } from '../redux/SearchDataSlice';
+import { SearchDataState, setData } from '../redux/SearchDataSlice';
 import { setLoaderData } from '../redux/LoaderSlice';
 function SortComponent() {
     const [startValue, setStartValue] = useState();
@@ -30,10 +30,12 @@ function SortComponent() {
     const [fileClass, setFileClass] = useState('');
     const [uploadedBy, setUploadedBy] = useState('');
     const [dateValue, setDateValue] = useState('');
+    const [uploadedByUserValue, setUploadedByUserValue] = useState([])
     
     const dispatch = useDispatch();
     const sortData = useSelector(SortDataSate)
     const dateSortData = useSelector(DateSortDataState)
+    const data = useSelector(SearchDataState)
 
   const applyFilter = () =>{
     dispatch(setFileClassData(fileClass))
@@ -52,6 +54,16 @@ function SortComponent() {
       console.log(response)
     })
   }
+
+  // useEffect(()=>{
+  //   axios.post("http://172.174.180.163:8500/users/GetAll",{
+  //     username:"admin",
+  //     password:"admin"
+  //   }).then((response)=>{
+  //     console.log(response.data)
+  //      setUploadedByUserValue(response.data)
+  //   })
+  // },[])
 
 
   const handleChange = (event) => {
@@ -91,7 +103,7 @@ function SortComponent() {
           <MenuItem value={3}>Resumes</MenuItem>
           <MenuItem value={4}>Certifications</MenuItem>
           <MenuItem value={5}>Letter of credit</MenuItem>
-          <MenuItem value={6}>Presentation</MenuItem>
+          <MenuItem value={6}>Goods Receipt</MenuItem>
         </Select>
       </FormControl>
     </Box>
@@ -168,6 +180,8 @@ function SortComponent() {
       </div>
       </>) : (
         <div className={Style.sortCont} >
+
+        <p style={{marginRight:"20px"}}>Results Found : {data.length}</p>
         <div onClick={async()=>{
               dispatch(setFileClassData(0))
               dispatch(setDateData(''))

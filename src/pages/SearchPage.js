@@ -70,9 +70,9 @@ function SearchPage() {
         }
         if(FileClassFilterData === 2){
         if(dateData !== ''){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "Sales Order" 
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "sales_order" 
           }
-          return val._source.fileClassification === "Sales Order" 
+          return val._source.fileClassification === "sales_order" 
         }
         if(FileClassFilterData === 3){
         if(dateData !== ''){
@@ -82,21 +82,21 @@ function SearchPage() {
         }
         if(FileClassFilterData === 4){
         if(dateData !== ''){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "Certifications" 
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "certification" 
           }
-          return val._source.fileClassification === "Certifications" 
+          return val._source.fileClassification === "certification" 
         }
         if(FileClassFilterData === 5){
         if(dateData !== ''){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "Letter of credit" 
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "letter_of_credit" 
           }
-          return val._source.fileClassification === "Letter of credit" 
+          return val._source.fileClassification === "letter_of_credit" 
         }
         if(FileClassFilterData === 6){
         if(dateData !== ''){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "Presentation" 
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "goods_receipt" 
           }
-          return val._source.fileClassification === "Presentation" 
+          return val._source.fileClassification === "goods_receipt" 
         }
         if(FileClassFilterData === 0){
           if(dateData !== ''){
