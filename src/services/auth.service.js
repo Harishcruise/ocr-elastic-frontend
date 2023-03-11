@@ -1,29 +1,5 @@
 import axios from "axios";
 
-
-// const API_URL = "http://172.174.180.163:8500/users/Login";
-
-// const fetchPiechartData = (bodyFormData) => {
-//   return axios({
-//     method: "post",
-//     url: "http://172.174.180.163:8500/users/StorageDetails",
-//     data: bodyFormData,
-//     headers: { "Content-Type": "multipart/form-data" },
-//   })
-//     .then(function (response) {
-//       // var ChartValue = response.data.Allocated;
-//       var ChartData = response.data;
-//       console.log(ChartData);
-//       // setPieChartValue({...PieChartValue, ChartValue});
-//       setPieChartValue([response.data]);
-//       console.log(response.data);
-      
-//     })
-//     .catch(function (response) {
-//       console.log(response);
-//     });
-//   }
-
 const login = (bodyFormData) => {
   return axios({
     method: "post",
@@ -46,13 +22,6 @@ const login = (bodyFormData) => {
 const logout = () => {
   localStorage.removeItem("user");
   localStorage.removeItem("userCredentials");
-
-  // caches.keys().then((names) => {
-  //   names.forEach((name) => {
-  //     caches.delete(name);
-  //   });
-  // });
-  // alert('Complete Cache Cleared')
 };
 
 const getCurrentUser = () => {
