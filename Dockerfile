@@ -16,7 +16,7 @@ COPY . .
 
 # Expose The port
 
-EXPOSE 3300
+EXPOSE 3000
 
 # Starting our application
 CMD npm start

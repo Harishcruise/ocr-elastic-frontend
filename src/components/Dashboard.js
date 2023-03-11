@@ -3,12 +3,16 @@ import axios from 'axios';
 import Style from './Dashboard.module.css';
 import { PieChart, Pie, Legend, Sector, Cell, ResponsiveContainer, BarChart, Bar, CartesianGrid, XAxis, YAxis, LineChart, Line, Tooltip, AreaChart,
   Area} from 'recharts';
+import user from "../assets/user.png";
+import { FiUser} from "react-icons/fi";
+import datetime from 'react-datetime';
 
 function Dashboard() {
   const [BarChartValue, setBarChartValue] = useState([]);
   const [PieChartValue, setPieChartValue] = useState([]);
   const [LineChartValue, setLineChartValue] = useState([]);
-  const [RecentActivity,setRecentActivity] = useState([]);
+  const [AreaChartValue, setAreaChartValue] = useState([]);
+  
 
   var bodyFormData = new FormData();
   bodyFormData.append('username', 'kapil'); //Current User
@@ -62,14 +66,43 @@ function Dashboard() {
   useEffect(() => {
     fetchBarchartData(bodyFormData);
   }, []);
+  
+  var AreaFormData = new FormData();
+  AreaFormData.append('username', 'admin'); //Current User
+  AreaFormData.append('password', 'admin'); //Current Password
+
+  const fetchAreachartData = (AreaFormData) => {
+    return axios({
+      method: "post",
+      url: "http://172.174.180.163:8500/users/GetAll",
+      data: AreaFormData,
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+      .then(function (response) {
+        // var LineChartData = response.data;
+        // console.log(LineChartData);
+        setAreaChartValue(response.data);
+        console.log(response.data);
+        
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+    }
+  useEffect(() => {
+    fetchAreachartData(AreaFormData);
+  }, []);
 
   
+  var LineFormData = new FormData();
+  LineFormData.append('username', 'balaji'); //Current User
+  LineFormData.append('password', 'balajipwd'); //Current Password
 
-  const fetchLinechartData = (bodyFormData) => {
+  const fetchLinechartData = (LineFormData) => {
     return axios({
       method: "post",
       url: "http://172.174.180.163:8500/stats/DateBasedFrequency",
-      data: bodyFormData,
+      data: LineFormData,
       headers: { "Content-Type": "multipart/form-data" },
     })
       .then(function (response) {
@@ -84,13 +117,15 @@ function Dashboard() {
       });
     }
   useEffect(() => {
-    fetchLinechartData(bodyFormData);
+    fetchLinechartData(LineFormData);
   }, []);
 
   var ActivityFormData = new FormData();
   ActivityFormData.append('username', 'charan'); //Current User
   ActivityFormData.append('password', 'charanpwd'); 
 
+
+  const [RecentActivity,setRecentActivity] = useState([]);
   const fetchRecentActivity = (ActivityFormData) => {
     return axios({
       method: "post",
@@ -99,14 +134,19 @@ function Dashboard() {
       headers: { "Content-Type": "multipart/form-data" },
     })
       .then(function (response) {
-        // var LineChartData = response.data;
-        // console.log(LineChartData);
-        // var dateTime = response.data.Files[0]['file_date'];
-        // var Time = dateTime.split('');
-        // console.log(Time);
-        setRecentActivity([response.data.Files]);
-        // console.log(typeof response.data.Files[0]['file_date']);
-        console.log(typeof response.data.Files[0]);
+        // var string = response.data.Files[0]['file_date'];
+        // console.log(string);
+        // const dateTime = Date(string);
+        // console.log(dateTime);
+        // var d2 = new Date()
+        // console.log(d2);
+        // var currTime = d2.getTime();
+        // console.log(currTime);
+        
+        // var diff = Math.floor((dateTime - currTime)/(24*3600*1000));
+        // console.log(diff);
+
+       setRecentActivity(response.data.Files);
         console.log(response.data.Files);
       
         
@@ -118,6 +158,8 @@ function Dashboard() {
   useEffect(() => {
     fetchRecentActivity(ActivityFormData);
   }, []);
+
+
 
   const files = [
     {name: 'pdf', students: 80},
@@ -186,7 +228,7 @@ const upload = [
 
 
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+const COLORS = ['#32CD32', '#00C49F', '#FFBB28', '#FF8042'];
 
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
@@ -249,11 +291,11 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
       </div>
       
      <div className={Style.Areachart}>
-      <p>User based Storage</p>
-     <AreaChart width={400} height={196} margin={{ right:20}} data={time}>
-    <Area dataKey="Used_Storage" fill="orange" stroke="orange" />
+      <p>Users based Storage</p>
+     <AreaChart width={400} height={196} margin={{ right:20}} data={AreaChartValue}>
+    <Area dataKey="used_size" fill="orange" stroke="orange" />
     {/* <CartesianGrid stroke="#ccc" /> */}
-    <XAxis dataKey="name" />
+    <XAxis dataKey="username" />
     <YAxis/>
     <Tooltip />
   </AreaChart>
@@ -265,25 +307,26 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
      <LineChart width={770} height={290} data={LineChartValue}
   margin={{right: 20, left: 20, bottom: 5 }}>
   {/* <CartesianGrid strokeDasharray="3 3" /> */}
-  <XAxis dataKey="20.01.2022" />
+  <XAxis dataKey="09/03/2023 16:12:38" />
   <YAxis />
   <Tooltip />
   <Legend />
-  <Line type="monotone" dataKey="20.01.2022" stroke="#8B008B" />
-  <Line type="monotone" dataKey="21.01.2022" stroke="#82ca9d" />
+  <Line type="monotone" dataKey="09/03/2023 16:12:38" stroke="#8B008B" />
+  <Line type="monotone" dataKey="10/03/2023 12:39:42" stroke="#82ca9d" />
 </LineChart>
      </div>
 
      <div className={Style.Activity}>
         <p>Recent Activity</p>
-        {RecentActivity.map(([key,value])=> <div className={Style.ActivityDiv}>
-          You uploaded {value.file_name} {value.file_date}
-        </div>) }
-
-
-        
-      <BarChart color={"white"} width={400} height={260} margin={{ right:20}} data={files}>
-  </BarChart>
+        {
+        RecentActivity.map((file, index)=>
+          <div className={Style.ActivityDiv} key={index} >
+            <img className={Style.User} src={user} />
+            <p className={Style.Log}> You uploaded {file.file_name} on {file.file_date}</p>
+          </div>
+          ) 
+      }
+    
       </div>
 
       </div>
