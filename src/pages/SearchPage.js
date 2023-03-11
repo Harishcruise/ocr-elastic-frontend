@@ -13,7 +13,6 @@ import { setLoaderData } from '../redux/LoaderSlice';
 import { LoaderDataState } from '../redux/LoaderSlice';
 import { UploadedByFilterDataState } from '../redux/UploadedByFilterSlice';
 function SearchPage() {
-  const [loaderState,setLoaderState] = useState(true);
   const dispatch = useDispatch()
   const data = useSelector(SearchDataState)
   const dateData = useSelector(DateFilterDataState)
@@ -37,15 +36,17 @@ function SearchPage() {
   }
 
   useEffect(()=>{
-    // setLoaderState(true)
     intialData()
-    var AreaFormData = new FormData();
-    AreaFormData.append('username', 'admin'); //Current User
-    AreaFormData.append('password', 'admin');
+    // var AreaFormData = new FormData();
+    // AreaFormData.append('username', 'admin'); //Current User
+    // AreaFormData.append('password', 'admin');
     axios({
       method: "post",
       url: "http://172.174.180.163:8500/users/GetAll",
-      data: AreaFormData,
+      data: {
+        username : 'admin',
+        password : 'admin'
+      },
       headers: { "Content-Type": "multipart/form-data" },
     })
       .then(function (response) {
@@ -56,7 +57,6 @@ function SearchPage() {
       .catch(function (response) {
         console.log(response);
       });
-    // setLoaderState(false)
   },[])
   return (
     <div className={Style.container}>
