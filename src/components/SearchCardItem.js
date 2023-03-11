@@ -1,8 +1,12 @@
 import React from 'react'
 import { BsFillCloudDownloadFill, BsFillFileEarmarkFill } from 'react-icons/bs'
 import Style from './SearchCardItem.module.css'
-function SearchCardItem({fileName,dataBase64,type,fileClass,blobUrl,uploadedBy,uploadedDate}) {
+function SearchCardItem({fileName,dataBase64,type,fileClass,blobUrl,uploadedBy,uploadedDate,fileSize}) {
   var date = uploadedDate.split(' ')
+  var tempSize = fileSize.toString().split('.')
+  var tempSize1 = ""+tempSize[0]+tempSize[1]
+  var tempSize2 = tempSize1.replace(/^0+/, '');
+  var size = parseInt(tempSize2) * 0.0009765625;
     let fileString = {
         file_name: fileName,
         // file:`data:${type};base64,${dataBase64}`
@@ -65,6 +69,9 @@ function SearchCardItem({fileName,dataBase64,type,fileClass,blobUrl,uploadedBy,u
                           <p>
                             Uploaded By : {uploadedBy}
                           </p>
+                          {/* <p>
+                            File Size : {size}
+                          </p> */}
                           <div className={Style.downloadBtn}>
                           <BsFillCloudDownloadFill  size={20} onClick={downloadFile} />
                           </div>
