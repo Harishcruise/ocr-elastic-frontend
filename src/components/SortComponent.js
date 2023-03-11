@@ -22,12 +22,13 @@ import dayjs from 'dayjs';
 import axios from 'axios';
 import { SearchDataState, setData } from '../redux/SearchDataSlice';
 import { setLoaderData } from '../redux/LoaderSlice';
+import { setUploadedByFilterData } from '../redux/UploadedByFilterSlice';
 function SortComponent() {
     const [startValue, setStartValue] = useState();
     const [endValue, setEndValue] = useState();
     const [sortState, setSortState] = useState(false)
     const [sortState2, setSortState2] = useState(false)
-    const [fileClass, setFileClass] = useState('');
+    const [fileClass, setFileClass] = useState(0);
     const [uploadedBy, setUploadedBy] = useState('');
     const [dateValue, setDateValue] = useState('');
     const [uploadedByUserValue, setUploadedByUserValue] = useState([])
@@ -43,6 +44,7 @@ function SortComponent() {
       startDate : startValue,
       endDate : endValue
     }))
+    dispatch(setUploadedByFilterData(uploadedBy))
   }
 
   const intialData = async()=>{
@@ -55,20 +57,29 @@ function SortComponent() {
     })
   }
 
-  // useEffect(()=>{
-  //   axios.post("http://172.174.180.163:8500/users/GetAll",{
-  //     username:"admin",
-  //     password:"admin"
-  //   }).then((response)=>{
-  //     console.log(response.data)
-  //      setUploadedByUserValue(response.data)
-  //   })
-  // },[])
+  useEffect(()=>{
+    var AreaFormData = new FormData();
+    AreaFormData.append('username', 'admin'); //Current User
+    AreaFormData.append('password', 'admin');
+    axios({
+      method: "post",
+      url: "http://172.174.180.163:8500/users/GetAll",
+      data: AreaFormData,
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+      .then(function (response) {
+        console.log(response.data);
+        setUploadedByUserValue(response.data)
+        
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+  },[])
 
 
   const handleChange = (event) => {
     setUploadedBy(event.target.value);
-    
   };
   return (
     <>
@@ -117,8 +128,10 @@ function SortComponent() {
           value={uploadedBy}
           label="File Classification"
           onChange={handleChange}
-        >
-          <MenuItem value={1}>Balaji</MenuItem>
+        > 
+          {
+            uploadedByUserValue.map((val)=> <MenuItem value={val.username}>{val.username}</MenuItem>)
+          }
           {/* <MenuItem value={20}>Twenty</MenuItem>
           <MenuItem value={30}>Thirty</MenuItem> */}
         </Select>
@@ -185,6 +198,7 @@ function SortComponent() {
         <div onClick={async()=>{
               dispatch(setFileClassData(0))
               dispatch(setDateData(''))
+              dispatch(setUploadedByFilterData(''))
               dispatch(setLoaderData(true))
               await intialData()
               dispatch(setLoaderData(false))

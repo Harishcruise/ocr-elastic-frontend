@@ -11,6 +11,7 @@ import axios from 'axios';
 import { SortDataSate } from '../redux/SortSlice';
 import { setLoaderData } from '../redux/LoaderSlice';
 import { LoaderDataState } from '../redux/LoaderSlice';
+import { UploadedByFilterDataState } from '../redux/UploadedByFilterSlice';
 function SearchPage() {
   const [loaderState,setLoaderState] = useState(true);
   const dispatch = useDispatch()
@@ -19,7 +20,7 @@ function SearchPage() {
   const sortData = useSelector(SortDataSate)
   const loaderData = useSelector(LoaderDataState)
   const FileClassFilterData = useSelector(FileClassFilterDataState)
-
+  const uploadedByFilterData = useSelector(UploadedByFilterDataState)
   // axios.post("http://172.174.180.163:8081/getAllFiles",{
   //   index:"ocrfilestorage"
   // }).then((response)=>{
@@ -63,44 +64,45 @@ function SearchPage() {
 
        
         if(FileClassFilterData === 1){
-          if(dateData !== ''){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "purchase_order" 
+          if(dateData !== '' ){
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "purchase_order"  && val._source.fileUploadedBy === uploadedByFilterData
           }
           return val._source.fileClassification === "purchase_order" 
         }
         if(FileClassFilterData === 2){
-        if(dateData !== ''){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "sales_order" 
+        if(dateData !== '' || uploadedByFilterData !== ''){
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "sales_order"  && val._source.fileUploadedBy === uploadedByFilterData
           }
           return val._source.fileClassification === "sales_order" 
         }
         if(FileClassFilterData === 3){
-        if(dateData !== ''){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "resume" 
+        if(dateData !== '' || uploadedByFilterData !== ''){
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "resume"  && val._source.fileUploadedBy === uploadedByFilterData
           }
           return val._source.fileClassification === "resume" 
         }
         if(FileClassFilterData === 4){
-        if(dateData !== ''){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "certification" 
+        if(dateData !== '' || uploadedByFilterData !== ''){
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "certification"  && val._source.fileUploadedBy === uploadedByFilterData
           }
           return val._source.fileClassification === "certification" 
         }
         if(FileClassFilterData === 5){
-        if(dateData !== ''){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "letter_of_credit" 
+        if(dateData !== '' || uploadedByFilterData !== ''){
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "letter_of_credit"  && val._source.fileUploadedBy === uploadedByFilterData
           }
           return val._source.fileClassification === "letter_of_credit" 
         }
         if(FileClassFilterData === 6){
-        if(dateData !== ''){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "goods_receipt" 
+        if(dateData !== '' || uploadedByFilterData !== ''){
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "goods_receipt"  && val._source.fileUploadedBy === uploadedByFilterData 
           }
           return val._source.fileClassification === "goods_receipt" 
         }
         if(FileClassFilterData === 0){
-          if(dateData !== ''){
-            return (da >= dateData.startDate && da <= dateData.endDate)
+          if(dateData !== '' || uploadedByFilterData !== ''){
+            {/* console.log(uploadedByFilterData , val._source.fileUploadedBy) */}
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileUploadedBy === uploadedByFilterData
           }
           return val
         }
