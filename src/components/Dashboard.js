@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import { LoaderDataState,setLoaderData } from '../redux/LoaderSlice.js';
 import axios from 'axios';
 import Style from './Dashboard.module.css';
 import { PieChart, Pie, Legend, Sector, Cell, ResponsiveContainer, BarChart, Bar, CartesianGrid, XAxis, YAxis, LineChart, Line, Tooltip, AreaChart,
@@ -6,20 +7,26 @@ import { PieChart, Pie, Legend, Sector, Cell, ResponsiveContainer, BarChart, Bar
 import user from "../assets/user.png";
 import { FiUser} from "react-icons/fi";
 import datetime from 'react-datetime';
+import {useSelector ,useDispatch} from 'react-redux';
+import { format } from 'date-fns'
 
 function Dashboard() {
+
+  var userCredentials = JSON.parse(localStorage.getItem("userCredentials"))
   const [BarChartValue, setBarChartValue] = useState([]);
   const [PieChartValue, setPieChartValue] = useState([]);
   const [LineChartValue, setLineChartValue] = useState([]);
   const [AreaChartValue, setAreaChartValue] = useState([]);
   
+  const dispatch = useDispatch();
+  const loaderData = useSelector(LoaderDataState);
 
   var bodyFormData = new FormData();
-  bodyFormData.append('username', 'kapil'); //Current User
-  bodyFormData.append('password', 'kapilpwd'); //Current Password
+  bodyFormData.append('username', userCredentials.username); //Current User
+  bodyFormData.append('password', userCredentials.password); //Current Password
 
-  const fetchPiechartData = (bodyFormData) => {
-    return axios({
+  const fetchPiechartData = async (bodyFormData) => {
+    return await axios({
       method: "post",
       url: "http://172.174.180.163:8500/users/StorageDetails",
       data: bodyFormData,
@@ -30,7 +37,7 @@ function Dashboard() {
         var ChartData = response.data;
         console.log(ChartData);
         // setPieChartValue({...PieChartValue, ChartValue});
-        setPieChartValue([response.data]);
+        setPieChartValue(response.data);
         console.log(response.data);
         
       })
@@ -39,23 +46,27 @@ function Dashboard() {
       });
     }
   useEffect(() => {
+    dispatch(setLoaderData(true))
+    fetchAreachartData(userCredentials.username,userCredentials.password);
     fetchPiechartData(bodyFormData);
+    fetchBarchartData(bodyFormData);
+    fetchLinechartData(bodyFormData);
+    fetchRecentActivity(bodyFormData);
+    dispatch(setLoaderData(false))
   }, []);
 
 
   
 
-  const fetchBarchartData = (bodyFormData) => {
-    return axios({
+  const fetchBarchartData = async (bodyFormData) => {
+    return await axios({
       method: "post",
       url: "http://172.174.180.163:8500/stats/TypeBasedFrequency",
       data: bodyFormData,
       headers: { "Content-Type": "multipart/form-data" },
     })
       .then(function (response) {
-        // var BarChartData = response.data.txt;
-        // console.log(BarChartValue);
-        setBarChartValue([response.data]);
+        setBarChartValue(response.data);
         console.log(response.data);
         
       })
@@ -63,52 +74,31 @@ function Dashboard() {
         console.log(response);
       });
     }
-  useEffect(() => {
-    fetchBarchartData(bodyFormData);
-  }, []);
-  
-  var AreaFormData = new FormData();
-  AreaFormData.append('username', 'admin'); //Current User
-  AreaFormData.append('password', 'admin'); //Current Password
-
-  const fetchAreachartData = (AreaFormData) => {
-    return axios({
-      method: "post",
-      url: "http://172.174.180.163:8500/users/GetAll",
-      data: AreaFormData,
-      headers: { "Content-Type": "multipart/form-data" },
-    })
-      .then(function (response) {
-        // var LineChartData = response.data;
-        // console.log(LineChartData);
-        setAreaChartValue(response.data);
-        console.log(response.data);
-        
-      })
-      .catch(function (response) {
-        console.log(response);
-      });
-    }
-  useEffect(() => {
-    fetchAreachartData(AreaFormData);
-  }, []);
-
-  
-  var LineFormData = new FormData();
-  LineFormData.append('username', 'balaji'); //Current User
-  LineFormData.append('password', 'balajipwd'); //Current Password
-
-  const fetchLinechartData = (LineFormData) => {
-    return axios({
+    const fetchAreachartData = async (username, password) => {
+      return await axios
+        .post("http://172.174.180.163:8500/users/GetAll", {
+          username,
+          password,
+        })
+        .then(function (response) {
+                setAreaChartValue(response.data);
+                console.log(response.data);
+                
+              })
+              .catch(function (response) {
+                console.log(response);
+              });
+            }
+    
+const fetchLinechartData = async (bodyFormData) => {
+    return await axios({
       method: "post",
       url: "http://172.174.180.163:8500/stats/DateBasedFrequency",
-      data: LineFormData,
+      data: bodyFormData,
       headers: { "Content-Type": "multipart/form-data" },
     })
       .then(function (response) {
-        // var LineChartData = response.data;
-        // console.log(LineChartData);
-        setLineChartValue([response.data]);
+        setLineChartValue(response.data);
         console.log(response.data);
         
       })
@@ -116,35 +106,17 @@ function Dashboard() {
         console.log(response);
       });
     }
-  useEffect(() => {
-    fetchLinechartData(LineFormData);
-  }, []);
-
-  var ActivityFormData = new FormData();
-  ActivityFormData.append('username', 'charan'); //Current User
-  ActivityFormData.append('password', 'charanpwd'); 
 
 
   const [RecentActivity,setRecentActivity] = useState([]);
-  const fetchRecentActivity = (ActivityFormData) => {
-    return axios({
+  const fetchRecentActivity = async (bodyFormData) => {
+    return await axios({
       method: "post",
       url: "http://172.174.180.163:8500/users/GetMetaData",
-      data: ActivityFormData,
+      data: bodyFormData,
       headers: { "Content-Type": "multipart/form-data" },
     })
       .then(function (response) {
-        // var string = response.data.Files[0]['file_date'];
-        // console.log(string);
-        // const dateTime = Date(string);
-        // console.log(dateTime);
-        // var d2 = new Date()
-        // console.log(d2);
-        // var currTime = d2.getTime();
-        // console.log(currTime);
-        
-        // var diff = Math.floor((dateTime - currTime)/(24*3600*1000));
-        // console.log(diff);
 
        setRecentActivity(response.data.Files);
         console.log(response.data.Files);
@@ -155,80 +127,12 @@ function Dashboard() {
         console.log(response);
       });
     }
-  useEffect(() => {
-    fetchRecentActivity(ActivityFormData);
-  }, []);
-
-
-
-  const files = [
-    {name: 'pdf', students: 80},
-    {name: 'jpg', students: 200},
-    {name: 'txt', students: 500}
-  ];
-  const data = [
-    { name: 'Total Storage', value: 600 },
-    { name: 'Free Space', value: 400 }
-];
-const time = [
-  {name: 'kapil', Used_Storage: 400},
-  {name: 'Balaji', Used_Storage: 700},
-  {name: 'Harish',Used_Storage: 200},
-  {name: 'Charan', Used_Storage: 1000}
-];
-
-
-const upload = [
-  {
-    "name": "Jan",
-    "uv": 4000,
-    "Upload Rate": 2400,
-    "amt": 2400
-  },
-  {
-    "name": "March",
-    "uv": 3000,
-    "Upload Rate": 1398,
-    "amt": 2210
-  },
-  {
-    "name": "June",
-    "uv": 2000,
-    "Upload Rate": 9800,
-    "amt": 2290
-  },
-  {
-    "name": "Aug",
-    "uv": 2780,
-    "Upload Rate": 3908,
-    "amt": 2000
-  },
-  {
-    "name": "Sept",
-    "uv": 1890,
-    "Upload Rate": 4800,
-    "amt": 2181
-  },
-  {
-    "name": "Nov",
-    "uv": 2390,
-    "Upload Rate": 3800,
-    "amt": 2500
-  },
-  {
-    "name": "Dec",
-    "uv": 3490,
-    "Upload Rate": 4300,
-    "amt": 2100
-  }
-]
 
 
 
 
-
-
-const COLORS = ['#32CD32', '#00C49F', '#FFBB28', '#FF8042'];
+const COLORS = ['#32CD32', '#1E90FF', '#FF69B4', '#FF8042','#3CB371'];
+const COLOR = ['#FF69B4','#DEB887','#A0522D','#00FFFF','#DAA520','#9932CC','#FA8072']
 
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
@@ -254,8 +158,7 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
     <p>User Storage</p>
                             <PieChart width={300} height={196}>
                                 <Legend wrapperStyle={{bottom:9, left: 45}} layout="horizontal" horizontal="bottom" align="bottom" />
-                                <Pie   
-                                      // data = {Object.entries(PieChartValue).filter(([key]) => !['Unit'].includes(key)).map( ([key,value]) => value)}
+                                <Pie 
                                       data={PieChartValue}
 
                                   
@@ -265,12 +168,9 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
                                     label={renderCustomizedLabel}
                                     outerRadius={80}
                                     fill="#8884d8"
-                                    dataKey= "Allocated"
-                                    // nameKey="Allocated"
+                                    dataKey= "value"
+                                    nameKey="storage"
                                 >
-                                  {/* {[PieChartValue.Allocated, PieChartValue.Used].map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                    ))} */}
                                     {PieChartValue.map((entry, index) => (<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />))}
                                   
                                 </Pie>
@@ -278,17 +178,26 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
                             </PieChart>
 			</div>
 
+
+  
       <div className={Style.Barchart}>
         <p>Uploaded Files based on file type</p>
+        {/* { BarChartValue.length === 0 ? "No Data Found" : */}
       <BarChart width={450} height={196} margin={{ right:20}} 
       data={BarChartValue}>
-    <Bar dataKey="txt" fill="#FF69B4"></Bar>
+    <Bar dataKey="value" fill="#FF69B4">
+    {BarChartValue.map((entry, index) => (<Cell key={`cell-${index}`} fill={COLOR[index % COLOR.length]} />))}
+    </Bar>
     {/* <CartesianGrid stroke="#ccc" /> */}
     <XAxis dataKey="name" />
     <YAxis />
     <Tooltip cursor={false}/>
   </BarChart>
+  {/* } */}
       </div>
+
+
+
       
      <div className={Style.Areachart}>
       <p>Users based Storage</p>
@@ -305,27 +214,31 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
      <div className={Style.Linechart}>
       <p>File Growth over Time</p>
      <LineChart width={770} height={290} data={LineChartValue}
-  margin={{right: 20, left: 20, bottom: 5 }}>
+  margin={{right: 20, left: 20, bottom: 5 }} >
   {/* <CartesianGrid strokeDasharray="3 3" /> */}
-  <XAxis dataKey="09/03/2023 16:12:38" />
+  <XAxis dataKey="name" />
   <YAxis />
-  <Tooltip />
+  <Tooltip  />
   <Legend />
-  <Line type="monotone" dataKey="09/03/2023 16:12:38" stroke="#8B008B" />
-  <Line type="monotone" dataKey="10/03/2023 12:39:42" stroke="#82ca9d" />
+  <Line type="stepBefore" dataKey="value" layout="horizontal" stroke="#8B008B" activeDot={{ r: 8 }}/>
 </LineChart>
      </div>
 
      <div className={Style.Activity}>
         <p>Recent Activity</p>
         {
-        RecentActivity.map((file, index)=>
-          <div className={Style.ActivityDiv} key={index} >
+        RecentActivity.map((file, index)=>{
+        if(index >= 10){
+          return;
+        }
+        return <div className={Style.ActivityDiv} key={index} >
             <img className={Style.User} src={user} />
-            <p className={Style.Log}> You uploaded {file.file_name} on {file.file_date}</p>
+            <p className={Style.Log}> You uploaded <span className={Style.ActLog}>{file.file_name}</span> on <span className={Style.ActLog}>{file.file_date}</span></p>
           </div>
-          ) 
+ } )
       }
+
+
     
       </div>
 
