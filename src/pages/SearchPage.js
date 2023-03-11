@@ -11,6 +11,7 @@ import axios from 'axios';
 import { SortDataSate } from '../redux/SortSlice';
 import { setLoaderData } from '../redux/LoaderSlice';
 import { LoaderDataState } from '../redux/LoaderSlice';
+import { UploadedByFilterDataState } from '../redux/UploadedByFilterSlice';
 function SearchPage() {
   const [loaderState,setLoaderState] = useState(true);
   const dispatch = useDispatch()
@@ -19,17 +20,10 @@ function SearchPage() {
   const sortData = useSelector(SortDataSate)
   const loaderData = useSelector(LoaderDataState)
   const FileClassFilterData = useSelector(FileClassFilterDataState)
+  const uploadedByFilterData = useSelector(UploadedByFilterDataState)
+  const [uploadedByUserValue, setUploadedByUserValue] = useState([])
+ 
 
-  // axios.post("http://172.174.180.163:8081/getAllFiles",{
-  //   index:"ocrfilestorage"
-  // }).then((response)=>{
-  //   dispatch(setData(response.data.hits))
-  //   setLoaderState(false)
-  // })
-  // setTimeout(()=>{
-    
-  //   setLoaderState(false)
-  // },[2500])
   const intialData = async()=>{
     dispatch(setLoaderData(true))
     var tempData = JSON.parse(localStorage.getItem("userCredentials"))
@@ -45,13 +39,30 @@ function SearchPage() {
   useEffect(()=>{
     // setLoaderState(true)
     intialData()
+    var AreaFormData = new FormData();
+    AreaFormData.append('username', 'admin'); //Current User
+    AreaFormData.append('password', 'admin');
+    axios({
+      method: "post",
+      url: "http://172.174.180.163:8500/users/GetAll",
+      data: AreaFormData,
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+      .then(function (response) {
+        console.log(response.data);
+        setUploadedByUserValue(response.data)
+        
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
     // setLoaderState(false)
   },[])
   return (
     <div className={Style.container}>
     {
       (loaderData) ? (<Loader />) : (
-        <><SortComponent/>
+        <><SortComponent uplodedUsername={uploadedByUserValue}/>
         <div className= {Style.cols}>
       {
         data.filter((val)=>{
@@ -63,44 +74,45 @@ function SearchPage() {
 
        
         if(FileClassFilterData === 1){
-          if(dateData !== ''){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "purchase_order" 
+          if(dateData !== '' ){
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "purchase_order"  && val._source.fileUploadedBy === uploadedByFilterData
           }
           return val._source.fileClassification === "purchase_order" 
         }
         if(FileClassFilterData === 2){
-        if(dateData !== ''){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "Sales Order" 
+        if(dateData !== '' || uploadedByFilterData !== ''){
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "sales_order"  && val._source.fileUploadedBy === uploadedByFilterData
           }
-          return val._source.fileClassification === "Sales Order" 
+          return val._source.fileClassification === "sales_order" 
         }
         if(FileClassFilterData === 3){
-        if(dateData !== ''){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "resume" 
+        if(dateData !== '' || uploadedByFilterData !== ''){
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "resume"  && val._source.fileUploadedBy === uploadedByFilterData
           }
           return val._source.fileClassification === "resume" 
         }
         if(FileClassFilterData === 4){
-        if(dateData !== ''){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "Certifications" 
+        if(dateData !== '' || uploadedByFilterData !== ''){
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "certification"  && val._source.fileUploadedBy === uploadedByFilterData
           }
-          return val._source.fileClassification === "Certifications" 
+          return val._source.fileClassification === "certification" 
         }
         if(FileClassFilterData === 5){
-        if(dateData !== ''){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "Letter of credit" 
+        if(dateData !== '' || uploadedByFilterData !== ''){
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "letter_of_credit"  && val._source.fileUploadedBy === uploadedByFilterData
           }
-          return val._source.fileClassification === "Letter of credit" 
+          return val._source.fileClassification === "letter_of_credit" 
         }
         if(FileClassFilterData === 6){
-        if(dateData !== ''){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "Presentation" 
+        if(dateData !== '' || uploadedByFilterData !== ''){
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "goods_receipt"  && val._source.fileUploadedBy === uploadedByFilterData 
           }
-          return val._source.fileClassification === "Presentation" 
+          return val._source.fileClassification === "goods_receipt" 
         }
         if(FileClassFilterData === 0){
-          if(dateData !== ''){
-            return (da >= dateData.startDate && da <= dateData.endDate)
+          if(dateData !== '' || uploadedByFilterData !== ''){
+            {/* console.log(uploadedByFilterData , val._source.fileUploadedBy) */}
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileUploadedBy === uploadedByFilterData
           }
           return val
         }
@@ -143,7 +155,6 @@ function SearchPage() {
     }
     return 0;
 }).map((val)=>{
-          console.log(val)
           var ext = String(val._source.filename).split('.').pop()
           return(<SearchCardItem fileName={val._source.filename} type={ext} fileClass={val._source.fileClassification} dataBase64={val._source.fileBase64} blobUrl={val._source.fileURL} uploadedBy={val._source.fileUploadedBy} uploadedDate={val._source.fileUploadedDate} />)
         })

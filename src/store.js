@@ -5,6 +5,7 @@ import DateFilterReducer from './redux/DateFilterSlice'
 import SortReducer from './redux/SortSlice'
 import DateSortReducer from './redux/DateSortSlice'
 import LoaderReducer from './redux/LoaderSlice'
+import UploadedByFilterReducer from './redux/UploadedByFilterSlice'
 export default configureStore({
 reducer: {
     SearchData: SearchDataReducer,
@@ -12,7 +13,8 @@ reducer: {
     DateFilterData:DateFilterReducer,
     SortData:SortReducer,
     DateSortData:DateSortReducer,
-    LoaderData:LoaderReducer
+    LoaderData:LoaderReducer,
+    UploadedByFilterData:UploadedByFilterReducer
 },
 })
 

@@ -20,20 +20,23 @@ import { setSortData , SortDataSate } from '../redux/SortSlice';
 import { DateSortDataState, setDateSortData } from '../redux/DateSortSlice';
 import dayjs from 'dayjs';
 import axios from 'axios';
-import { setData } from '../redux/SearchDataSlice';
+import { SearchDataState, setData } from '../redux/SearchDataSlice';
 import { setLoaderData } from '../redux/LoaderSlice';
-function SortComponent() {
+import { setUploadedByFilterData } from '../redux/UploadedByFilterSlice';
+function SortComponent({uplodedUsername}) {
     const [startValue, setStartValue] = useState();
     const [endValue, setEndValue] = useState();
     const [sortState, setSortState] = useState(false)
     const [sortState2, setSortState2] = useState(false)
-    const [fileClass, setFileClass] = useState('');
+    const [fileClass, setFileClass] = useState(0);
     const [uploadedBy, setUploadedBy] = useState('');
     const [dateValue, setDateValue] = useState('');
+    // const [uploadedByUserValue, setUploadedByUserValue] = useState([])
     
     const dispatch = useDispatch();
     const sortData = useSelector(SortDataSate)
     const dateSortData = useSelector(DateSortDataState)
+    const data = useSelector(SearchDataState)
 
   const applyFilter = () =>{
     dispatch(setFileClassData(fileClass))
@@ -41,6 +44,7 @@ function SortComponent() {
       startDate : startValue,
       endDate : endValue
     }))
+    dispatch(setUploadedByFilterData(uploadedBy))
   }
 
   const intialData = async()=>{
@@ -53,10 +57,29 @@ function SortComponent() {
     })
   }
 
+  // useEffect(()=>{
+  //   var AreaFormData = new FormData();
+  //   AreaFormData.append('username', 'admin'); //Current User
+  //   AreaFormData.append('password', 'admin');
+  //   axios({
+  //     method: "post",
+  //     url: "http://172.174.180.163:8500/users/GetAll",
+  //     data: AreaFormData,
+  //     headers: { "Content-Type": "multipart/form-data" },
+  //   })
+  //     .then(function (response) {
+  //       console.log(response.data);
+  //       setUploadedByUserValue(response.data)
+        
+  //     })
+  //     .catch(function (response) {
+  //       console.log(response);
+  //     });
+  // },[])
+
 
   const handleChange = (event) => {
     setUploadedBy(event.target.value);
-    
   };
   return (
     <>
@@ -91,7 +114,7 @@ function SortComponent() {
           <MenuItem value={3}>Resumes</MenuItem>
           <MenuItem value={4}>Certifications</MenuItem>
           <MenuItem value={5}>Letter of credit</MenuItem>
-          <MenuItem value={6}>Presentation</MenuItem>
+          <MenuItem value={6}>Goods Receipt</MenuItem>
         </Select>
       </FormControl>
     </Box>
@@ -105,8 +128,10 @@ function SortComponent() {
           value={uploadedBy}
           label="File Classification"
           onChange={handleChange}
-        >
-          <MenuItem value={1}>Balaji</MenuItem>
+        > 
+          {
+            uplodedUsername.map((val)=> <MenuItem value={val.username}>{val.username}</MenuItem>)
+          }
           {/* <MenuItem value={20}>Twenty</MenuItem>
           <MenuItem value={30}>Thirty</MenuItem> */}
         </Select>
@@ -168,9 +193,12 @@ function SortComponent() {
       </div>
       </>) : (
         <div className={Style.sortCont} >
+
+        <p style={{marginRight:"20px"}}>Results Found : {data.length}</p>
         <div onClick={async()=>{
               dispatch(setFileClassData(0))
               dispatch(setDateData(''))
+              dispatch(setUploadedByFilterData(''))
               dispatch(setLoaderData(true))
               await intialData()
               dispatch(setLoaderData(false))

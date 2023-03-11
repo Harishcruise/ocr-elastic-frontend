@@ -5,10 +5,11 @@ import './UploadCard.css'
 import Loader from './Loader';
 import JSZip from 'jszip';
 import { useDispatch , useSelector } from 'react-redux';
+import { LoaderDataState, setLoaderData } from '../redux/LoaderSlice';
 const MAX_COUNT = 100;
 function UploadCard() {
     const navigate = useNavigate()
-    let zip = new JSZip();
+    
     const [uploadedFiles, setUploadedFiles] = useState([])
     const [fileLimit, setFileLimit] = useState(false);
     const [uploadData, setUploadData] = useState([])
@@ -16,62 +17,14 @@ function UploadCard() {
     const [successPage,setSuccessPage] = useState(false)
     const [data,setData] = useState()
     const [listFileState,setListFileState] = useState(false)
+    const [payload , setPayload] = useState({})
+    const dispatch = useDispatch()
+    const loaderData = useSelector(LoaderDataState)
+
 
     
-    // useEffect(()=>{
-    //     var temp =[]
-    //     var objTemp ={}
-    //     var obj
-    //     uploadedFiles.map((val)=>{
-            
-    //         var reader = new FileReader();
-    //         reader.readAsDataURL(val);
-    //         reader.onload = function () {
-    //         temp.push({
-    //             [val.name]:reader.result.split(',').pop()
-    //         })
-    //         var base64 = reader.result.split(',').pop();
-    //         obj = Object.assign(objTemp,{[val.name]:base64});
-    //         };     
-    //         reader.onerror = function (error) {
-    //         console.log('Error: ', error);
-    //         };
-    //     })
-    //     setData(objTemp)
-    //     setUploadData(temp)
-
-    // },[uploadedFiles])
-    
-
-    const handleUploadFiles = files => {
-        const uploaded = [...uploadedFiles];
-        let limitExceeded = false;
-        files.some((file) => {
-            if (uploaded.findIndex((f) => f.name === file.name) === -1) {
-                uploaded.push(file);
-                if (uploaded.length === MAX_COUNT) setFileLimit(true);
-                if (uploaded.length > MAX_COUNT) {
-                    alert(`You can only add a maximum of ${MAX_COUNT} files`);
-                    setFileLimit(false);
-                    limitExceeded = true;
-                    return true;
-                }
-            }
-        })
-        if (!limitExceeded){
-            setUploadedFiles(uploaded)
-        } 
-        setListFileState(true)
-
-    }
-
-    const onClickHandle = async() =>{
-        setUploadState(true)
-        // await axios.post("http://172.174.180.163:8500/base64",data)
-        // .then((response)=>{
-        //     console.log(data)
-        //     console.log(response)
-        // })
+    useEffect(()=>{
+        let zip = new JSZip();
         for(let file of uploadedFiles){ 
             let filename = file.name
             zip.file(filename, file)
@@ -93,32 +46,62 @@ function UploadCard() {
                     index:tempData.username,
                     [name]:base64
                 }
-                console.log(obj)
-            await axios.post("http://172.174.180.163:8500/users/AddFile",obj)
+                // console.log(obj)
+                setPayload(obj)
+            };     
+        })
+    },[uploadedFiles])
+    
+
+    const handleUploadFiles = files => {
+        const uploaded = [...uploadedFiles];
+        let limitExceeded = false;
+        files.some((file) => {
+            if (uploaded.findIndex((f) => f.name === file.name) === -1) {
+                uploaded.push(file);
+                if (uploaded.length === MAX_COUNT) setFileLimit(true);
+                if (uploaded.length > MAX_COUNT) {
+                    alert(`You can only add a maximum of ${MAX_COUNT} files`);
+                    setFileLimit(false);
+                    limitExceeded = true;
+                    return true;
+                }
+            }
+        })
+        if (!limitExceeded){
+            setUploadedFiles(uploaded)
+        } 
+        setListFileState(true)
+        // console.log(payload)
+    }
+
+    const onClickHandle = async() =>{
+        // setUploadState(true)
+        dispatch(setLoaderData(true))
+        
+        await axios.post("http://172.174.180.163:8500/users/AddFile",payload)
                 .then((response)=>{
             // console.log(data)
             console.log(response)
         })
-            };     
-        })
-        setUploadState(false)
+        // console.log(payload)
+        // setUploadState(false)
+        dispatch(setLoaderData(false))
         setSuccessPage(true)
     }
 
     const handleFileEvent =  (e) => {
         const chosenFiles = Array.prototype.slice.call(e.target.files)
         handleUploadFiles(chosenFiles);
-        console.log(uploadedFiles)
-        
     }
   return (
     <>
     <div className='searchHeader'>
 
-    <div onClick={()=>(navigate('/Home'))} className='uploadBtn'>  Back </div>
+    <div onClick={()=>(navigate('/Search'))} className='uploadBtn'>  Back </div>
 
     </div>
-    {(uploadState) ? (<Loader/>):
+    {(loaderData) ? (<Loader/>):
     ((successPage) ? (
         <div style={{display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column",marginTop:"200px"}}>
         <h2> Your Data has been Uploaded Successfully</h2>
