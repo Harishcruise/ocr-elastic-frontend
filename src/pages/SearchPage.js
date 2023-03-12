@@ -13,7 +13,6 @@ import { setLoaderData } from '../redux/LoaderSlice';
 import { LoaderDataState } from '../redux/LoaderSlice';
 import { UploadedByFilterDataState } from '../redux/UploadedByFilterSlice';
 function SearchPage() {
-  const [loaderState,setLoaderState] = useState(true);
   const dispatch = useDispatch()
   const data = useSelector(SearchDataState)
   const dateData = useSelector(DateFilterDataState)
@@ -37,16 +36,18 @@ function SearchPage() {
   }
 
   useEffect(()=>{
-    // setLoaderState(true)
     intialData()
-    var AreaFormData = new FormData();
-    AreaFormData.append('username', 'admin'); //Current User
-    AreaFormData.append('password', 'admin');
+    // var AreaFormData = new FormData();
+    // AreaFormData.append('username', 'admin'); //Current User
+    // AreaFormData.append('password', 'admin');
     axios({
       method: "post",
       url: "http://172.174.180.163:8500/users/GetAll",
-      data: AreaFormData,
-      headers: { "Content-Type": "multipart/form-data" },
+      data: {
+        username : 'admin',
+        password : 'admin'
+      },
+      headers: { "Content-Type": "application/json" },
     })
       .then(function (response) {
         console.log(response.data);
@@ -56,7 +57,6 @@ function SearchPage() {
       .catch(function (response) {
         console.log(response);
       });
-    // setLoaderState(false)
   },[])
   return (
     <div className={Style.container}>
@@ -156,7 +156,7 @@ function SearchPage() {
     return 0;
 }).map((val)=>{
           var ext = String(val._source.filename).split('.').pop()
-          return(<SearchCardItem fileName={val._source.filename} type={ext} fileClass={val._source.fileClassification} dataBase64={val._source.fileBase64} blobUrl={val._source.fileURL} uploadedBy={val._source.fileUploadedBy} uploadedDate={val._source.fileUploadedDate} />)
+          return(<SearchCardItem fileName={val._source.filename} fileSize={val._source.fileSize} type={ext} fileClass={val._source.fileClassification} dataBase64={val._source.fileBase64} blobUrl={val._source.fileURL} uploadedBy={val._source.fileUploadedBy} uploadedDate={val._source.fileUploadedDate} />)
         })
       }
       </div>
