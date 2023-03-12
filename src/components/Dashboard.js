@@ -97,6 +97,7 @@ const fetchLinechartData = async (bodyFormData) => {
       .then(function (response) {
       
       response.data.map((each)=>{
+        each.name = each.name.split(" ",-1).pop();
        each.name = each.name.split(":",1).pop();
         return each;
       })
