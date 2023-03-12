@@ -98,7 +98,24 @@ const fetchLinechartData = async (bodyFormData) => {
       headers: { "Content-Type": "multipart/form-data" },
     })
       .then(function (response) {
-        setLineChartValue(response.data);
+      
+      response.data.map((each)=>{
+       each.name = each.name.split(":",1).pop();
+        return each;
+      })
+      
+      var arr = [];
+      response.data.forEach((each,index)=> {
+      var repeat =  arr.findIndex(item => item.name === each.name);
+              if(repeat != -1){
+              arr[repeat].value += 1;}
+              else{
+               arr.push(each);
+              }
+  })
+  console.log(`array ${arr}`);
+       
+        setLineChartValue(arr);
         console.log(response.data);
         
       })
