@@ -6,7 +6,6 @@ import { PieChart, Pie, Legend, Sector, Cell, ResponsiveContainer, BarChart, Bar
   Area} from 'recharts';
 import user from "../assets/user.png";
 import { FiUser} from "react-icons/fi";
-import datetime from 'react-datetime';
 import {useSelector ,useDispatch} from 'react-redux';
 import { format } from 'date-fns'
 
@@ -33,10 +32,8 @@ function Dashboard() {
       headers: { "Content-Type": "multipart/form-data" },
     })
       .then(function (response) {
-        // var ChartValue = response.data.Allocated;
         var ChartData = response.data;
         console.log(ChartData);
-        // setPieChartValue({...PieChartValue, ChartValue});
         setPieChartValue(response.data);
         console.log(response.data);
         
