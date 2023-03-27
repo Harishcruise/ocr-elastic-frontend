@@ -59,9 +59,9 @@ function Header() {
 
               </div>
             
-            <div style={{display:"flex",alignItems:"center"}}>
+            {/* <div style={{display:"flex",alignItems:"center"}}>
               Hi , {JSON.parse(localStorage.getItem("userCredentials")).username}
-            </div>
+            </div> */}
           
             <div onClick={()=>(navigate('Upload'))} className={Style.uploadBtn}>
                + Upload
