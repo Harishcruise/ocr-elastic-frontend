@@ -6,7 +6,6 @@ import { PieChart, Pie, Legend, Sector, Cell, ResponsiveContainer, BarChart, Bar
   Area} from 'recharts';
 import user from "../assets/user.png";
 import { FiUser} from "react-icons/fi";
-import datetime from 'react-datetime';
 import {useSelector ,useDispatch} from 'react-redux';
 import { format } from 'date-fns'
 
@@ -33,10 +32,8 @@ function Dashboard() {
       headers: { "Content-Type": "multipart/form-data" },
     })
       .then(function (response) {
-        // var ChartValue = response.data.Allocated;
         var ChartData = response.data;
         console.log(ChartData);
-        // setPieChartValue({...PieChartValue, ChartValue});
         setPieChartValue(response.data);
         console.log(response.data);
         
@@ -98,7 +95,25 @@ const fetchLinechartData = async (bodyFormData) => {
       headers: { "Content-Type": "multipart/form-data" },
     })
       .then(function (response) {
-        setLineChartValue(response.data);
+      
+      response.data.map((each)=>{
+        each.name = each.name.split(" ",-1).pop();
+       each.name = each.name.split(":",1).pop();
+        return each;
+      })
+      
+      var arr = [];
+      response.data.forEach((each,index)=> {
+      var repeat =  arr.findIndex(item => item.name === each.name);
+              if(repeat != -1){
+              arr[repeat].value += 1;}
+              else{
+               arr.push(each);
+              }
+  })
+  console.log(`array ${arr}`);
+       
+        setLineChartValue(arr);
         console.log(response.data);
         
       })
