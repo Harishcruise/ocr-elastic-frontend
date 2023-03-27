@@ -156,7 +156,7 @@ function SearchPage() {
     return 0;
 }).map((val)=>{
           var ext = String(val._source.filename).split('.').pop()
-          return(<SearchCardItem fileName={val._source.filename} fileSize={val._source.fileSize} type={ext} fileClass={val._source.fileClassification} dataBase64={val._source.fileBase64} blobUrl={val._source.fileURL} uploadedBy={val._source.fileUploadedBy} uploadedDate={val._source.fileUploadedDate} />)
+          return(<SearchCardItem id={val._id} fileName={val._source.filename} fileSize={val._source.fileSize} type={ext} fileClass={val._source.fileClassification} dataBase64={val._source.fileBase64} blobUrl={val._source.fileURL} uploadedBy={val._source.fileUploadedBy} uploadedDate={val._source.fileUploadedDate} />)
         })
       }
       </div>

@@ -22,7 +22,7 @@ function LoginCard() {
           if(user.data.status === "success"){
           console.log(user.data.status)
           navigate("Search");
-          window.location.reload();
+          // window.location.reload();
           }
           
         },
