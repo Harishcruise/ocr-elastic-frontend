@@ -216,7 +216,7 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
       
      <div className={Style.Areachart}>
       <p>Users based Storage</p>
-     <AreaChart width={400} height={196} margin={{ right:20}} data={AreaChartValue}>
+     <AreaChart width={500} height={196} margin={{ right:20}} data={AreaChartValue}>
     <Area dataKey="used_size" fill="orange" stroke="orange" />
     {/* <CartesianGrid stroke="#ccc" /> */}
     <XAxis dataKey="username" />
