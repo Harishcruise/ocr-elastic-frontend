@@ -44,7 +44,7 @@ function SideNavBar() {
     </div>
     </Link> */}
 
-   <Link to='Login'>
+   <Link to='/'>
     <div onClick={logOut} className={Style.icon} style={{marginTop:"300px"}}>
         <FiLogOut size={25} />
     </div>
