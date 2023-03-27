@@ -1,21 +1,26 @@
 import React from 'react'
-import { BsFillFileEarmarkFill } from "react-icons/bs";
+import { BsFillCloudDownloadFill, BsFillFileEarmarkFill } from "react-icons/bs";
 import { FiDownload } from "react-icons/fi";
 import Style from './SearchCard.module.css'
-function SearchCard({fileName,dataBase64,type}) {
-    console.log(type)
+function SearchCard({fileName,dataBase64,type,fileClass,blobUrl,uploadedBy,uploadedDate,fileSize}) {
+  var date = uploadedDate.split(' ')
+  var tempSize = fileSize.toString().split('.')
+  var tempSize1 = ""+tempSize[0]+tempSize[1]
+  var tempSize2 = tempSize1.replace(/^0+/, '');
+  var size = parseInt(tempSize2) * 0.0009765625;
     let fileString = {
         file_name: fileName,
-        file:`data:${type};base64,${dataBase64}`
+        // file:`data:${type};base64,${dataBase64}`
+        file: dataBase64
       }
-    function downloadPDF(file) {
-        const pdfLink = file.file;
-        const anchorElement = document.createElement('a');
-        const fileName = `${file.file_name}`;
-        anchorElement.href = pdfLink;
-        anchorElement.download = fileName;
-        anchorElement.click();
-    }
+    // function downloadPDF(file) {
+    //     const pdfLink = file.file;
+    //     const anchorElement = document.createElement('a');
+    //     const fileName = `${file.file_name}`;
+    //     anchorElement.href = pdfLink;
+    //     anchorElement.download = fileName;
+    //     anchorElement.click();
+    // }
 
     function dataURLtoFile(dataurl, filename) {
  
@@ -32,6 +37,11 @@ function SearchCard({fileName,dataBase64,type}) {
       return new File([u8arr], filename, {type:mime});
   }
 
+    function downloadFile() {
+      
+      window.open(blobUrl);
+    }
+
     function previewFile() {
       var files = dataURLtoFile(fileString.file,fileString.file_name);
       console.log(files)
@@ -43,12 +53,14 @@ function SearchCard({fileName,dataBase64,type}) {
     
   return (
     <>
-    <div className={Style.cont_Light}  >
-    <FiDownload style={{marginLeft:"125px"}} size={20} onClick={()=>downloadPDF(fileString)}/>
+    <div className={Style.cont_Light} onClick={previewFile} >
+    {/* <FiDownload style={{marginLeft:"125px"}} size={20} onClick={()=>downloadPDF(fileString)}/> */}
 
     <BsFillFileEarmarkFill color="#80AFE7" size={100} onClick={previewFile}/>
 
-    <h5 className='text-center'>{fileName}</h5>
+    <h5 className='text-center' style={{fontSize:"20px"}}>{fileName}</h5>
+
+    <BsFillCloudDownloadFill  size={20} onClick={downloadFile} />
 
     </div>
 

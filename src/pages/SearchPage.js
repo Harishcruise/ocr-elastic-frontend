@@ -12,13 +12,18 @@ import { SortDataSate } from '../redux/SortSlice';
 import { setLoaderData } from '../redux/LoaderSlice';
 import { LoaderDataState } from '../redux/LoaderSlice';
 import { UploadedByFilterDataState } from '../redux/UploadedByFilterSlice';
+import { FileTypeDataState } from '../redux/FileTypeSlice';
+import SearchCard from '../components/SearchCard';
+import { GridListDataState } from '../redux/GridListSlice';
 function SearchPage() {
   const dispatch = useDispatch()
   const data = useSelector(SearchDataState)
+  const gridListData = useSelector(GridListDataState)
   const dateData = useSelector(DateFilterDataState)
   const sortData = useSelector(SortDataSate)
   const loaderData = useSelector(LoaderDataState)
   const FileClassFilterData = useSelector(FileClassFilterDataState)
+  const FileTypeData = useSelector(FileTypeDataState);
   const uploadedByFilterData = useSelector(UploadedByFilterDataState)
   const [uploadedByUserValue, setUploadedByUserValue] = useState([])
  
@@ -70,12 +75,10 @@ function SearchPage() {
           let tempA  = val._source.fileUploadedDate.split(' ')[0]
           let tempA1 = tempA.split("/").reverse()
           let da = new Date(""+tempA1[0]+"-"+tempA1[1]+"-"+tempA1[2])
-
-
        
         if(FileClassFilterData === 1){
           if(dateData !== '' ){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "purchase_order"  && val._source.fileUploadedBy === uploadedByFilterData
+            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "purchase_order"  && val._source.fileUploadedBy === uploadedByFilterData 
           }
           return val._source.fileClassification === "purchase_order" 
         }
@@ -111,7 +114,6 @@ function SearchPage() {
         }
         if(FileClassFilterData === 0){
           if(dateData !== '' || uploadedByFilterData !== ''){
-            {/* console.log(uploadedByFilterData , val._source.fileUploadedBy) */}
             return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileUploadedBy === uploadedByFilterData
           }
           return val
@@ -156,13 +158,15 @@ function SearchPage() {
     return 0;
 }).map((val)=>{
           var ext = String(val._source.filename).split('.').pop()
-          return(<SearchCardItem fileName={val._source.filename} fileSize={val._source.fileSize} type={ext} fileClass={val._source.fileClassification} dataBase64={val._source.fileBase64} blobUrl={val._source.fileURL} uploadedBy={val._source.fileUploadedBy} uploadedDate={val._source.fileUploadedDate} />)
+          return((gridListData ? <SearchCard id={val._id} fileName={val._source.filename} fileSize={val._source.fileSize} type={ext} fileClass={val._source.fileClassification} dataBase64={val._source.fileBase64} blobUrl={val._source.fileURL} uploadedBy={val._source.fileUploadedBy} uploadedDate={val._source.fileUploadedDate} /> : <SearchCardItem id={val._id} fileName={val._source.filename} fileSize={val._source.fileSize} type={ext} fileClass={val._source.fileClassification} dataBase64={val._source.fileBase64} blobUrl={val._source.fileURL} uploadedBy={val._source.fileUploadedBy} uploadedDate={val._source.fileUploadedDate} /> ) )
         })
       }
       </div>
       </>
       )
     }
+
+    {/* <SearchCard /> */}
     
     
       
