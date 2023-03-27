@@ -55,10 +55,18 @@ function SearchCard({fileName,dataBase64,type,fileClass,blobUrl,uploadedBy,uploa
     <>
     <div className={Style.cont_Light} onClick={previewFile} >
     {/* <FiDownload style={{marginLeft:"125px"}} size={20} onClick={()=>downloadPDF(fileString)}/> */}
-
-    <BsFillFileEarmarkFill color="#80AFE7" size={100} onClick={previewFile}/>
+    <div>
+    <div style={{display:"flex",alignItems:"center",height:"40px"}}>
+    <BsFillFileEarmarkFill color="#80AFE7" size={20} onClick={previewFile}/>
 
     <h5 className='text-center' style={{fontSize:"20px"}}>{fileName}</h5>
+    </div>
+    <div style={{display:"flex",gap:"30px"}}>
+    <p>File Type: {fileClass}</p>
+    <p>Uploaded By: {uploadedBy}</p>
+    <p>Uploaded Date: {date[0]}</p>
+    </div>
+    </div>
 
     <BsFillCloudDownloadFill  size={20} onClick={downloadFile} />
 
