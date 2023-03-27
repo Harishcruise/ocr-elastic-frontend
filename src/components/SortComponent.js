@@ -18,6 +18,8 @@ import { setDateData } from '../redux/DateFilterSlice';
 import { setFileClassData } from '../redux/FileClassFilterSlice';
 import { setSortData , SortDataSate } from '../redux/SortSlice';
 import { DateSortDataState, setDateSortData } from '../redux/DateSortSlice';
+import { setFileTypeData } from '../redux/FileTypeSlice'
+import { setGridListData,GridListDataState } from '../redux/GridListSlice'
 import dayjs from 'dayjs';
 import axios from 'axios';
 import { SearchDataState, setData } from '../redux/SearchDataSlice';
@@ -30,6 +32,7 @@ function SortComponent({uplodedUsername}) {
     const [sortState2, setSortState2] = useState(false)
     const [fileClass, setFileClass] = useState(0);
     const [uploadedBy, setUploadedBy] = useState('');
+    const [documentType,setDocumentType] = useState(0)
     const [dateValue, setDateValue] = useState('');
     // const [uploadedByUserValue, setUploadedByUserValue] = useState([])
     
@@ -37,6 +40,7 @@ function SortComponent({uplodedUsername}) {
     const sortData = useSelector(SortDataSate)
     const dateSortData = useSelector(DateSortDataState)
     const data = useSelector(SearchDataState)
+    const gridListData = useSelector(GridListDataState)
 
   const applyFilter = () =>{
     dispatch(setFileClassData(fileClass))
@@ -45,6 +49,8 @@ function SortComponent({uplodedUsername}) {
       endDate : endValue
     }))
     dispatch(setUploadedByFilterData(uploadedBy))
+    dispatch(setFileTypeData(documentType))
+
   }
 
   const intialData = async()=>{
@@ -121,6 +127,26 @@ function SortComponent({uplodedUsername}) {
 
     <Box sx={{ minWidth: 120 }}>
       <FormControl style={{width:"200px",backgroundColor:"#ffffff",borderRadius:"5px",marginTop:"8px"}}>
+        <InputLabel id="demo-simple-select-label">Document Type</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={documentType}
+          label="File Classification"
+          onChange={(e)=>{
+            setDocumentType(e.target.value)
+          }}
+        >
+          <MenuItem value={0}>All</MenuItem>
+          <MenuItem value={1}>PDF</MenuItem>
+          <MenuItem value={2}>PNG</MenuItem>
+          <MenuItem value={2}>JPG</MenuItem>
+        </Select>
+      </FormControl>
+    </Box>
+
+    <Box sx={{ minWidth: 120 }}>
+      <FormControl style={{width:"200px",backgroundColor:"#ffffff",borderRadius:"5px",marginTop:"8px"}}>
         <InputLabel id="demo-simple-select-label">Uploaded By</InputLabel>
         <Select
           labelId="demo-simple-select-label"
@@ -137,6 +163,7 @@ function SortComponent({uplodedUsername}) {
         </Select>
       </FormControl>
     </Box>
+
 
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer  components={['DatePicker']}>
@@ -204,6 +231,9 @@ function SortComponent({uplodedUsername}) {
               dispatch(setLoaderData(false))
         }} className={Style.resetBtn}>
                Reset
+            </div>
+        <div onClick={()=>{dispatch(setGridListData(!gridListData))}} className={Style.resetBtn}>
+               {gridListData ? "Grid" : "List"}
             </div>
         <div className={Style.sortIcon} onClick={()=>{
           setSortState2(true)
