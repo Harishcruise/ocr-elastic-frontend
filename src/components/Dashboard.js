@@ -97,7 +97,7 @@ const fetchLinechartData = async (bodyFormData) => {
       .then(function (response) {
       
       response.data.map((each)=>{
-        each.name = each.name.split(" ",-1).pop();
+        // each.name = each.name.split(" ",-1).pop();
        each.name = each.name.split(":",1).pop();
         return each;
       })
@@ -143,7 +143,21 @@ const fetchLinechartData = async (bodyFormData) => {
       });
     }
 
+    // const fetchRecentActivity = async(username)=>{
+    //   await axios.post("http://172.174.180.163:8081/getAllFiles",{
+    //     index:username
+    //   })
+    //   .then(function (response) {
 
+    //          setRecentActivity(response.data);
+    //           console.log(`Activity: ${response.data}`);
+            
+              
+    //         })
+    //         .catch(function (response) {
+    //           console.log(response);
+    //         });
+    //       }
 
 
 const COLORS = ['#32CD32', '#1E90FF', '#FF69B4', '#FF8042','#3CB371'];
@@ -156,9 +170,12 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
     return (
+      <>
         <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
             {`${(percent * 100).toFixed(0)}%`}
         </text>
+
+        </>
     );
 };
 
