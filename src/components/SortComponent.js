@@ -3,11 +3,14 @@ import { GrSort } from "react-icons/gr";
 import { VscChromeClose } from "react-icons/vsc";
 import { BiSortAlt2 } from "react-icons/bi";
 import { FaSortAlphaDown , FaSortAlphaDownAlt } from "react-icons/fa";
-import Style from './SortComponent.module.css'
+import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
+import Chip from '@mui/material/Chip';
+import Style from './SortComponent.module.css'
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -25,6 +28,8 @@ import axios from 'axios';
 import { SearchDataState, setData } from '../redux/SearchDataSlice';
 import { setLoaderData } from '../redux/LoaderSlice';
 import { setUploadedByFilterData } from '../redux/UploadedByFilterSlice';
+
+
 function SortComponent({uplodedUsername}) {
     const [startValue, setStartValue] = useState();
     const [endValue, setEndValue] = useState();
@@ -106,15 +111,16 @@ function SortComponent({uplodedUsername}) {
       <FormControl style={{width:"200px",backgroundColor:"#ffffff",borderRadius:"5px",marginTop:"8px"}}>
         <InputLabel id="demo-simple-select-label">File Classification</InputLabel>
         <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
+          labelId="demo-multiple-chip-label"
+          id="demo-multiple-chip"
           value={fileClass}
           label="File Classification"
+          // multiple
           onChange={(e)=>{
             setFileClass(e.target.value)
           }}
         >
-          <MenuItem value={0}>All</MenuItem>
+        <MenuItem value={0}>All</MenuItem>
           <MenuItem value={1}>Purchase Order</MenuItem>
           <MenuItem value={2}>Sales Order</MenuItem>
           <MenuItem value={3}>Resumes</MenuItem>
@@ -140,7 +146,7 @@ function SortComponent({uplodedUsername}) {
           <MenuItem value={0}>All</MenuItem>
           <MenuItem value={1}>PDF</MenuItem>
           <MenuItem value={2}>PNG</MenuItem>
-          <MenuItem value={2}>JPG</MenuItem>
+          <MenuItem value={3}>JPG</MenuItem>
         </Select>
       </FormControl>
     </Box>
