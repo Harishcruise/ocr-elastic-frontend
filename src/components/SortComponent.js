@@ -2,6 +2,7 @@ import React, {useEffect, useState}from 'react'
 import { GrSort } from "react-icons/gr";
 import { VscChromeClose } from "react-icons/vsc";
 import { BiSortAlt2 } from "react-icons/bi";
+import { FiFilter, FiGrid, FiList } from "react-icons/fi";
 import { FaSortAlphaDown , FaSortAlphaDownAlt } from "react-icons/fa";
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -35,7 +36,7 @@ function SortComponent({uplodedUsername}) {
     const [endValue, setEndValue] = useState();
     const [sortState, setSortState] = useState(false)
     const [sortState2, setSortState2] = useState(false)
-    const [fileClass, setFileClass] = useState(0);
+    const [fileClass, setFileClass] = useState([]);
     const [uploadedBy, setUploadedBy] = useState('');
     const [documentType,setDocumentType] = useState(0)
     const [dateValue, setDateValue] = useState('');
@@ -115,12 +116,12 @@ function SortComponent({uplodedUsername}) {
           id="demo-multiple-chip"
           value={fileClass}
           label="File Classification"
-          // multiple
+          multiple
           onChange={(e)=>{
             setFileClass(e.target.value)
           }}
         >
-        <MenuItem value={0}>All</MenuItem>
+        {/* <MenuItem value={0}>All</MenuItem> */}
           <MenuItem value={1}>Purchase Order</MenuItem>
           <MenuItem value={2}>Sales Order</MenuItem>
           <MenuItem value={3}>Resumes</MenuItem>
@@ -229,7 +230,7 @@ function SortComponent({uplodedUsername}) {
 
         <p style={{marginRight:"20px"}}>Results Found : {data.length}</p>
         <div onClick={async()=>{
-              dispatch(setFileClassData(0))
+              dispatch(setFileClassData([]))
               dispatch(setDateData(''))
               dispatch(setUploadedByFilterData(''))
               dispatch(setLoaderData(true))
@@ -238,8 +239,8 @@ function SortComponent({uplodedUsername}) {
         }} className={Style.resetBtn}>
                Reset
             </div>
-        <div onClick={()=>{dispatch(setGridListData(!gridListData))}} className={Style.resetBtn}>
-               {gridListData ? "Grid" : "List"}
+        <div className={Style.sortIcon} onClick={()=>{dispatch(setGridListData(!gridListData))}}>
+               {gridListData ? <FiGrid size={30}/>: <FiList size={30}/>}
             </div>
         <div className={Style.sortIcon} onClick={()=>{
           setSortState2(true)

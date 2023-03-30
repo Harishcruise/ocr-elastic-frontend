@@ -5,7 +5,7 @@ import SearchCardItem from '../components/SearchCardItem';
 import Loader from '../components/Loader';
 import {useSelector ,useDispatch} from 'react-redux';
 import { DateFilterDataState } from '../redux/DateFilterSlice';
-import {FileClassFilterDataState} from '../redux/FileClassFilterSlice';
+import {FileClassFilterDataState, setFileClassData} from '../redux/FileClassFilterSlice';
 import { SearchDataState , setData } from '../redux/SearchDataSlice';
 import axios from 'axios';
 import { SortDataSate } from '../redux/SortSlice';
@@ -26,6 +26,8 @@ function SearchPage() {
   const FileTypeData = useSelector(FileTypeDataState);
   const uploadedByFilterData = useSelector(UploadedByFilterDataState)
   const [uploadedByUserValue, setUploadedByUserValue] = useState([])
+  const [fileData,setFileData] = useState(data)
+  
  
 
   const intialData = async()=>{
@@ -63,6 +65,63 @@ function SearchPage() {
         console.log(response);
       });
   },[])
+
+  useEffect(()=>{
+    if(FileClassFilterData.length === 0){
+      setFileData(data)
+    }
+  })
+
+  useEffect(()=>{
+    var temp1 = data.filter((val)=>{
+      if(FileClassFilterData.includes(1)){
+          return val._source.fileClassification === "purchase_order"
+      }
+    })
+    var temp2 = data.filter((val)=>{
+      if(FileClassFilterData.includes(2)){
+          return val._source.fileClassification === "sales_order"
+      }
+    })
+    var temp3 = data.filter((val)=>{
+      if(FileClassFilterData.includes(3)){
+          return val._source.fileClassification === "resume"
+      }
+    })
+    var temp4 = data.filter((val)=>{
+      if(FileClassFilterData.includes(4)){
+          return val._source.fileClassification === "certification"
+      }
+    })
+    var temp5 = data.filter((val)=>{
+      if(FileClassFilterData.includes(5)){
+          return val._source.fileClassification === "letter_of_credit"
+      }
+    })
+    var temp6 = data.filter((val)=>{
+      if(FileClassFilterData.includes(6)){
+          return val._source.fileClassification === "goods_receipt"
+      }
+    })
+    
+    // var temp7 = data.filter((val)=>{
+    //   if(FileClassFilterData.includes(0)){
+    //       return val
+    //   }
+    // })
+
+   var array =[]
+   array.push(...temp1);
+   array.push(...temp2);
+   array.push(...temp3);
+   array.push(...temp4);
+   array.push(...temp5);
+   array.push(...temp6);
+  //  array.push(...temp7);
+   setFileData(array)
+   console.log(array)
+   
+  },[FileClassFilterData])
   return (
     <div className={Style.container}>
     {
@@ -70,119 +129,28 @@ function SearchPage() {
         <><SortComponent uplodedUsername={uploadedByUserValue}/>
         <div className= {Style.cols}>
       {
-        data.filter((val)=>{
-
+        fileData.filter((val)=>{
           let tempA  = val._source.fileUploadedDate.split(' ')[0]
           let tempA1 = tempA.split("/").reverse()
           let da = new Date(""+tempA1[0]+"-"+tempA1[1]+"-"+tempA1[2])
        
-        if(FileClassFilterData === 1){
           if(dateData !== '' && FileTypeData === 0){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "purchase_order"  && val._source.fileUploadedBy === uploadedByFilterData 
+            return (da >= dateData.startDate && da <= dateData.endDate)  && val._source.fileUploadedBy === uploadedByFilterData 
           }
           else if(dateData !== '' && FileTypeData === 1){
             console.log(String(val._source.filename).split('.').pop() === "pdf")
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "purchase_order"  && val._source.fileUploadedBy === uploadedByFilterData && String(val._source.filename).split('.').pop() === "pdf"
-          }
-          else if(dateData !== '' && FileTypeData === 2){
-            console.log(String(val._source.filename).split('.').pop() === "png")
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "purchase_order"  && val._source.fileUploadedBy === uploadedByFilterData && String(val._source.filename).split('.').pop() === "png"
-          }
-          else if(dateData !== '' && FileTypeData === 3){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "purchase_order"  && val._source.fileUploadedBy === uploadedByFilterData && String(val._source.filename).split('.').pop() === "jpg"
-          }
-          {/* return val._source.fileClassification === "purchase_order"  */}
-        }
-        if(FileClassFilterData === 2){
-        if(dateData !== ''  && FileTypeData === 0){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "sales_order"  && val._source.fileUploadedBy === uploadedByFilterData
-          }
-          else if(dateData !== '' && FileTypeData === 1){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "sales_order"  && val._source.fileUploadedBy === uploadedByFilterData && String(val._source.filename).split('.').pop() === "pdf"
-          }
-          else if(dateData !== '' && FileTypeData === 2){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "sales_order"  && val._source.fileUploadedBy === uploadedByFilterData && String(val._source.filename).split('.').pop() === "png"
-          }
-          else if(dateData !== '' && FileTypeData === 3){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "sales_order"  && val._source.fileUploadedBy === uploadedByFilterData && String(val._source.filename).split('.').pop() === "jpg"
-          }
-          {/* return val._source.fileClassification === "sales_order"  */}
-        }
-        if(FileClassFilterData === 3){
-        if(dateData !== ''  && FileTypeData === 0){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "resume"  && val._source.fileUploadedBy === uploadedByFilterData
-          }
-          else if(dateData !== '' && FileTypeData === 1){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "resume"  && val._source.fileUploadedBy === uploadedByFilterData && String(val._source.filename).split('.').pop() === "pdf"
-          }
-          else if(dateData !== '' && FileTypeData === 2){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "resume"  && val._source.fileUploadedBy === uploadedByFilterData && String(val._source.filename).split('.').pop() === "png"
-          }
-          else if(dateData !== '' && FileTypeData === 3){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "resume"  && val._source.fileUploadedBy === uploadedByFilterData && String(val._source.filename).split('.').pop() === "jpg"
-          }
-          {/* return val._source.fileClassification === "resume"  */}
-        }
-        if(FileClassFilterData === 4){
-        if(dateData !== ''  && FileTypeData === 0){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "certification"  && val._source.fileUploadedBy === uploadedByFilterData
-          }
-          else if(dateData !== '' && FileTypeData === 1){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "certification"  && val._source.fileUploadedBy === uploadedByFilterData && String(val._source.filename).split('.').pop() === "pdf"
-          }
-          else if(dateData !== '' && FileTypeData === 2){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "certification"  && val._source.fileUploadedBy === uploadedByFilterData && String(val._source.filename).split('.').pop() === "png"
-          }
-          else if(dateData !== '' && FileTypeData === 3){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "certification"  && val._source.fileUploadedBy === uploadedByFilterData && String(val._source.filename).split('.').pop() === "jpg"
-          }
-          {/* return val._source.fileClassification === "certification"  */}
-        }
-        if(FileClassFilterData === 5){
-        if(dateData !== ''  && FileTypeData === 0){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "letter_of_credit"  && val._source.fileUploadedBy === uploadedByFilterData
-          }
-          else if(dateData !== '' && FileTypeData === 1){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "letter_of_credit"  && val._source.fileUploadedBy === uploadedByFilterData && String(val._source.filename).split('.').pop() === "pdf"
-          }
-          else if(dateData !== '' && FileTypeData === 2){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "letter_of_credit"  && val._source.fileUploadedBy === uploadedByFilterData && String(val._source.filename).split('.').pop() === "png"
-          }
-          else if(dateData !== '' && FileTypeData === 3){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "letter_of_credit"  && val._source.fileUploadedBy === uploadedByFilterData && String(val._source.filename).split('.').pop() === "jpg"
-          }
-          {/* return val._source.fileClassification === "letter_of_credit"  */}
-        }
-        if(FileClassFilterData === 6){
-        if(dateData !== ''  && FileTypeData === 0){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "goods_receipt"  && val._source.fileUploadedBy === uploadedByFilterData 
-          }
-          else if(dateData !== '' && FileTypeData === 1){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "goods_receipt"  && val._source.fileUploadedBy === uploadedByFilterData && String(val._source.filename).split('.').pop() === "pdf"
-          }
-          else if(dateData !== '' && FileTypeData === 2){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "goods_receipt"  && val._source.fileUploadedBy === uploadedByFilterData && String(val._source.filename).split('.').pop() === "png"
-          }
-          else if(dateData !== '' && FileTypeData === 3){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileClassification === "goods_receipt"  && val._source.fileUploadedBy === uploadedByFilterData && String(val._source.filename).split('.').pop() === "jpg"
-          }
-          {/* return val._source.fileClassification === "goods_receipt"  */}
-        }
-        if(FileClassFilterData === 0){
-          if(dateData !== ''  && FileTypeData === 0){
-            return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileUploadedBy === uploadedByFilterData
-          }
-          else if(dateData !== '' && FileTypeData === 1){
             return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileUploadedBy === uploadedByFilterData && String(val._source.filename).split('.').pop() === "pdf"
           }
           else if(dateData !== '' && FileTypeData === 2){
+            console.log(String(val._source.filename).split('.').pop() === "png")
             return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileUploadedBy === uploadedByFilterData && String(val._source.filename).split('.').pop() === "png"
           }
           else if(dateData !== '' && FileTypeData === 3){
             return (da >= dateData.startDate && da <= dateData.endDate) && val._source.fileUploadedBy === uploadedByFilterData && String(val._source.filename).split('.').pop() === "jpg"
           }
+          {/* return val._source.fileClassification === "purchase_order"  */}
+        
           {/* return val */}
-        }
         return val
         }).sort((a, b) => {
     let fa = a._source.filename.toLowerCase(),

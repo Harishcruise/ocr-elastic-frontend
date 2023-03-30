@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const FileClassFilterSlice = createSlice({
     name:"FileClassFilterData",
     initialState:{
-        value: 0
+        value: []
     },
     reducers:{
         setFileClassData: (state,action) =>{
